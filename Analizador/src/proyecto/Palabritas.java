@@ -2,10 +2,10 @@
  PROYECTO ANALIZADOR LEXICO Y SINTACTICO
  INTEGRANTES:
  - Garcia Aispuro Alan Gerardo.
+ - Meza Leon Oscar Oswaldo.
  - Osuna Lizarraga Rubi Guadalupe.
  - Rodelo Cardenas Graciela.
 */
-
 package proyecto;
 
 import java.util.*;
@@ -24,6 +24,8 @@ public class Palabritas implements Tipo {
 	private Pattern patron2;
 	private Pattern patron3;
 	private Matcher verificar, veri;
+	String columnas[];
+	String filas[][];
 	String errorL = " LECTURA DE CODIGO COMPLETADA.\n";
 	int numerito;
 	
@@ -50,8 +52,11 @@ public class Palabritas implements Tipo {
 			rengloncito++;
 			
 		}
-		imprimirTabla();
+		
 		errorL += Sintactico.VerificadorSintactico(tokens);
+		columnas = new String[4];
+		filas = new String[tokens.size()][4];
+		imprimirTabla();
 		for(int x = tokens.size()-1;x>=0;x--)
 			tokens.remove(x);
 		
@@ -200,15 +205,21 @@ public class Palabritas implements Tipo {
 	}
 	private void imprimirTabla() {
 		int noToken = 0, renglon = 0;
-		System.out.printf(" | %3s | %20s | %20s | %20s | %40s | %20s | %20s | \n", "No.", "Modificador", "Tipo", "Nombre", "Valor", "Renglon", "No. de Token");
 		int x = 0;
+		columnas[0] = "Nombre";
+		columnas[1] = "Tipo de Dato";
+		columnas[2] = "Posicion";
+		columnas[3] = "Valor";
+		int column = 0, fila = 0;
 		for(int i = 0;i<tokens.size();i++) {
 			String variable = "", valor = "", tipo = "";
 			int ident = 0;
 			int tipito=0;
-			boolean isTipo = false, isIgual = false;
+			int something = 0;
+			boolean isTipo = false, isIgual = false, isDeclaracion = false;
+			
 			for(int a = 0;a<tokens.get(i).size();a++) {
-					int something = tokens.get(i).get(a).getTipo();
+					something = tokens.get(i).get(a).getTipo();
 					if(isIgual&& something != PUNTO_COMA)
 						valor += tokens.get(i).get(a).getValor() + " ";
 					
@@ -218,18 +229,28 @@ public class Palabritas implements Tipo {
 					
 					if(something == IDENT) {
 						variable = tokens.get(i).get(a).getValor();
-						noToken = tokens.get(i).get(a).getNoToken();
 						renglon = tokens.get(i).get(a).getRenglon();
 						tipo = tokens.get(i).get(0).getValor();
-						tipito = tokens.get(i).get(0).getTipo();
+						if(!tipo.equals("class") &&  !tipo.equals("public"))
+							isDeclaracion =true;
 					}	
 					
 					
 				
 			}
+			
+			column = 0;
+			if(isDeclaracion) {
+				filas[fila][column] = variable;
+				++column;
+				filas[fila][column] = tipo;
+				++column;
+				filas[fila][column] = renglon +"";
+				++column;
+				filas[fila][column] = valor;
 				
-			if(!tipo.isEmpty()&&(tipito == IDENT || tipito == INT || tipito == BOOLEAN))
-				System.out.printf(" | %3d | %20s | %20s | %20s | %40s | %20d | %20d | \n", (++x), "", tipo, variable, valor, renglon, noToken);
+				fila++;
+			}
 		}
 	}
 	private boolean isReservada(String tipo) {
