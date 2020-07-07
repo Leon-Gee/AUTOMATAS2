@@ -2,6 +2,7 @@
  PROYECTO ANALIZADOR LEXICO Y SINTACTICO
  INTEGRANTES:
  - Garcia Aispuro Alan Gerardo.
+ - Meza Leon Oscar Oswaldo.
  - Osuna Lizarraga Rubi Guadalupe.
  - Rodelo Cardenas Graciela.
 */

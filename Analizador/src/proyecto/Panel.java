@@ -2,10 +2,10 @@
  PROYECTO ANALIZADOR LEXICO Y SINTACTICO
  INTEGRANTES:
  - Garcia Aispuro Alan Gerardo.
+ - Meza Leon Oscar Oswaldo.
  - Osuna Lizarraga Rubi Guadalupe.
  - Rodelo Cardenas Graciela.
 */
-
 package proyecto;
 import java.awt.Color;
 import java.awt.Font;
@@ -31,13 +31,14 @@ public class Panel extends JPanel {
 	JButton guardarArchivo;
 	JButton analizar;
 	JButton salir;
+	JTabbedPane consolaTabla;
 	EventoBotones eventos;
 	int lineas = 1;
 	JScrollPane scrollRenglones;
 	
 	public Panel() {
 		setLayout(null); 
-		
+		consolaTabla = new JTabbedPane();
 		//--------------------------------------------------
 		//---- CONTENEDOR PARA VER EL NUMERO DE RENGLON ----
 		//--------------------------------------------------
@@ -74,7 +75,7 @@ public class Panel extends JPanel {
 		
 		resultado = new JTextArea("Building in process...");
 		
-		eventos = new EventoBotones(escribir, renglones, resultado);
+		eventos = new EventoBotones(escribir, renglones, resultado,consolaTabla);
 		escribir.addKeyListener(eventos.linea);
 		
 		
@@ -108,9 +109,12 @@ public class Panel extends JPanel {
 		
 		
 		contiene2 = new JScrollPane(resultado);
-		contiene2.setBounds(30,425,600,120);
+		
 		contiene2.setWheelScrollingEnabled(true);
 		contiene2.setSize(750, 120);
+		
+		consolaTabla.add("Consola",contiene2);
+		consolaTabla.setBounds(30,425,600,120);
 		resultado.setEditable(false);
 		
 		
@@ -119,7 +123,7 @@ public class Panel extends JPanel {
 		add(abrirArchivo);
 	    add(guardarArchivo);
 	    add(analizar);
-	    add(contiene2);
+	    add(consolaTabla);
 		add(salir);
 	    
 	}

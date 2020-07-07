@@ -2,18 +2,17 @@
  PROYECTO ANALIZADOR LEXICO Y SINTACTICO
  INTEGRANTES:
  - Garcia Aispuro Alan Gerardo.
+ - Meza Leon Oscar Oswaldo.
  - Osuna Lizarraga Rubi Guadalupe.
  - Rodelo Cardenas Graciela.
 */
-
 package proyecto;
 
 import java.awt.event.*;
 import java.io.*;
 import java.util.StringTokenizer;
 
-import javax.swing.JFileChooser;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 public class EventoBotones {
 	AbrirArchivo abrir;
@@ -26,8 +25,9 @@ public class EventoBotones {
 	int lineas;
 	JTextArea texto;
 	JTextArea resultado;
+	JTabbedPane consolaTabla;
 	
-	public EventoBotones(JTextArea txt, JTextArea reng, JTextArea result ) {
+	public EventoBotones(JTextArea txt, JTextArea reng, JTextArea result, JTabbedPane cT) {
 		
 		texto = txt;
 		resultado = result;
@@ -38,6 +38,8 @@ public class EventoBotones {
 		analizar = new Analizar();
 		renglones = reng;
 		linea = new Lineas();
+		consolaTabla = cT;
+		
 		lineas = 1;
 	}
 	
@@ -74,6 +76,13 @@ public class EventoBotones {
 			Palabritas palabritas = new Palabritas(texto.getText());
 			palabritas.analizador();
 			resultado.setText(palabritas.errorL);
+			if(consolaTabla.getTabCount()> 1)
+				consolaTabla.removeTabAt(1);
+			
+			JScrollPane contiene1;
+			contiene1 = new JScrollPane(new JTable(palabritas.filas,palabritas.columnas));
+			contiene1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+			consolaTabla.add("Tabla Simbolos",contiene1);
 		}
 		
 	}
@@ -96,11 +105,9 @@ public class EventoBotones {
 			// TODO Auto-generated method stub
 			
 		}
-
 		@Override
 		public void keyTyped(KeyEvent e) {
 			// TODO Auto-generated method stub
-			
 		}
 		
 	}
@@ -108,6 +115,8 @@ public class EventoBotones {
 
 	
 		public void actionPerformed(ActionEvent event) {
+			if(consolaTabla.getTabCount()> 1)
+				consolaTabla.removeTabAt(1);
 			escoger.setDialogTitle("");
 			int seleccion = escoger.showOpenDialog(texto);
 			if(seleccion == escoger.APPROVE_OPTION) {
