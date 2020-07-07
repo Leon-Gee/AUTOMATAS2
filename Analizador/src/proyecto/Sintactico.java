@@ -81,7 +81,7 @@ public class Sintactico implements Tipo {
 								if(linea == tokens.size()-1 && llaves.size()!=0)
 									errores+=error(tokens.get(linea).get(checar),0,"}");
 								break;
-							default: // SEGUN YO AQUI ES YA CUALQUIER COSA NO ADMITIDA O ALGO AS√ç
+							default: // SEGUN YO AQUI ES YA CUALQUIER COSA NO ADMITIDA O ALGO AS√
 								errores += error(tokens.get(linea).get(checar),0,"");
 								break;
 							
@@ -783,6 +783,8 @@ public class Sintactico implements Tipo {
 						esp.add(NEW);
 						esp.add(THIS);
 					}
+					if (tipo==IGUAL)
+						esp.add(NUM);
 				}
 				
 				if(tipo == NUM || tipo == LENGTH || tipo == CORCHETE_C || tipo == PUNTO_COMA || tipo == PARENTESIS_C) {

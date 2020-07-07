@@ -204,6 +204,7 @@ public class Palabritas implements Tipo {
 		
 	}
 	private void imprimirTabla() {
+		errorL+= "ERRORES SEMÁNTICOS ENCONTRADOS: \n";
 		int noToken = 0, renglon = 0;
 		int x = 0;
 		columnas[0] = "Nombre";
@@ -216,7 +217,7 @@ public class Palabritas implements Tipo {
 			int ident = 0;
 			int tipito=0;
 			int something = 0;
-			boolean isTipo = false, isIgual = false, isDeclaracion = false;
+			boolean isTipo = false, isIgual = false, isDeclaracion = false, isused=false;
 			
 			for(int a = 0;a<tokens.get(i).size();a++) {
 					something = tokens.get(i).get(a).getTipo();
@@ -231,8 +232,10 @@ public class Palabritas implements Tipo {
 						variable = tokens.get(i).get(a).getValor();
 						renglon = tokens.get(i).get(a).getRenglon();
 						tipo = tokens.get(i).get(0).getValor();
-						if(!tipo.equals("class") &&  !tipo.equals("public"))
+						if(!tipo.equals("class") &&  !tipo.equals("public")&&!tipo.equals(variable))
 							isDeclaracion =true;
+						if (tipo.equals(variable))
+							isused=true;
 					}	
 					
 					
@@ -241,6 +244,42 @@ public class Palabritas implements Tipo {
 			
 			column = 0;
 			if(isDeclaracion) {
+				boolean existe=false, datoCorrecto=true;
+				//Buscar si ya se encuentra agregada
+				for (int j=0; j<fila; j++) {
+					if (filas[j][column].equals(variable)){
+					errorL+= "LA VARIABLE: ***"+ variable+ "*** QUE SE INTENTA DECLARAR EN LA POSICIÓN: ***"+renglon+"*** YA EXISTE EN LA POSICIÓN: ***" + filas[j][2] +"***.\n"; 
+					existe=true;
+					break;
+						}
+					}
+				//Verificar el tipo de dato
+				if (tipo.equals("int")) {
+					boolean valido=false;
+					char numeros []= {'0','1','2','3','4','5','6','7','8','9','+','-','*','/'};
+					for (int a=0; a<valor.length();a++) {
+						for (int b=0; b<numeros.length;b++) {
+							if (valor.charAt(a)==numeros[b]) {
+								valido=true;
+								break;
+							}
+						}
+						if (!valido) {
+							errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO INT Y LE INTENTA COLOCAR EL VALOR: ***" + valor+"***.\n"; 	
+							valido=false;
+							datoCorrecto=false;
+							break;
+						}
+					}
+	
+				}
+				if (tipo.equals("boolean")) {
+					if ((!(valor.equals("true "))) && (!(valor.equals("false ")))) {
+						errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO BOOLEAN Y LE INTENTA COLOCAR EL VALOR: ***" + valor+"***.\n"; 	
+						datoCorrecto=false;
+					}
+				}
+				if (!existe&&datoCorrecto) {
 				filas[fila][column] = variable;
 				++column;
 				filas[fila][column] = tipo;
@@ -250,6 +289,23 @@ public class Palabritas implements Tipo {
 				filas[fila][column] = valor;
 				
 				fila++;
+				}
+				existe=false;
+				datoCorrecto=true;
+			}
+			if (isused) {
+				//Ver si está declarada
+				boolean existe=false;
+				for (int j=0; j<fila; j++) {
+					if (filas[j][column].equals(variable)){ 
+					existe=true;
+					break;
+						}
+					}
+				if (existe==false)
+					errorL+= "ERROR SEMÁNTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+				existe=false;
+				
 			}
 		}
 	}
