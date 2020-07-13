@@ -7,41 +7,35 @@ import java.util.StringTokenizer;
 
 import javax.swing.*;
 
+import Aplicacion.Panel;
 import clasesBase.Palabritas;
 
-public class EventoBotones {
-	private AbrirArchivo abrir;
-	private GuardarArchivo guardar;
-	private Analizar analizar;
-	private Salir salir;
-	private Lineas linea;
-	private JFileChooser escoger;
-	private JTextArea renglones;
-	private int lineas;
-	private JTextArea texto;
-	private JTextArea resultado;
-	private	JTabbedPane consolaTabla;
+public class eventMngr implements ActionListener{
+	private Panel panel;
+	public JFileChooser escoger;
+	public JTextArea renglones;
+	public int lineas;
+	public JTextArea texto;
+	public JTextArea resultado;
+	public	JTabbedPane consolaTabla;
 	
-	public EventoBotones(JTextArea txt, JTextArea reng, JTextArea result, JTabbedPane cT) {
+	public eventMngr(Panel pan) {
 		
-		texto = txt;
-		resultado = result;
-		abrir = new AbrirArchivo();
-		salir = new Salir();
-		guardar = new GuardarArchivo();
-		escoger = new JFileChooser();
-		analizar = new Analizar();
-		renglones = reng;
-		linea = new Lineas();
-		consolaTabla = cT;
-		
+	
+		panel = pan;
 		lineas = 1;
+		texto = panel.getTxtEscribir();
+		resultado = panel.getTxtResultado();
+		escoger = new JFileChooser();
+		renglones = panel.getTxtRenglones();
+		consolaTabla = panel.getTpnConsolaTabla();
 	}
 	
-	public class GuardarArchivo implements ActionListener{
-
-	
-		public void actionPerformed(ActionEvent event) {
+	public void actionPerformed(ActionEvent e) {
+		
+		//evento para boton de guardar archivo
+		if(e.getSource() == panel.getBtnGuardarArchivo()) {
+			
 			escoger.setDialogTitle("");
 			int seleccion = escoger.showSaveDialog(texto);
 			if(seleccion == escoger.APPROVE_OPTION) {
@@ -57,17 +51,13 @@ public class EventoBotones {
 						escribir.println(linea);
 					}
 					escribir.close();
-				}catch(IOException e) {
-					e.printStackTrace();
+				}catch(IOException z) {
+					z.printStackTrace();
 				}
 			}
 		}
-		
-	}
-	public class Analizar implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		//evento para boton analizar
+		if(e.getSource() == panel.getBtnAnalizar()) {
 			Palabritas palabritas = new Palabritas(texto.getText());
 			palabritas.analizador();
 			resultado.setText(palabritas.getErrorL());
@@ -76,40 +66,17 @@ public class EventoBotones {
 			
 			JScrollPane contiene1;
 			contiene1 = new JScrollPane(new JTable(palabritas.getFilas(),palabritas.getColumnas()));
-			contiene1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
 			consolaTabla.add("Tabla Simbolos",contiene1);
-		}
-		
-	}
-	public class Salir implements ActionListener{
-		public void actionPerformed(ActionEvent event) {
-			System.exit(0);
-		}
-	}
-	public class Lineas implements KeyListener{
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-	        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-	        	renglones.append(++lineas + "\n");
-	        }
-	    }
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
+			
 			
 		}
-		@Override
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
+		//evento para boton salir
+		if(e.getSource() == panel.getBtnSalir()) {
+			System.exit(0);
 		}
-		
-	}
-	public class AbrirArchivo implements ActionListener{
-
-	
-		public void actionPerformed(ActionEvent event) {
+		//Evento boton para abrir archivo
+		if(e.getSource() == panel.getBtnAbrirArchivo()) {
 			if(consolaTabla.getTabCount()> 1)
 				consolaTabla.removeTabAt(1);
 			escoger.setDialogTitle("");
@@ -132,19 +99,25 @@ public class EventoBotones {
 						renglones.append((++lineas) +"\n");
 						try {
 							linita = tokenizar.nextToken();
-						}catch(Exception e) {
+						}catch(Exception z) {
 							
 						}
 						texto.append(linita+"\n");
 						linea = archivin.readLine();
 					}
 					archivin.close();
-				}catch(IOException e) {
+				}catch(IOException z) {
 					
 				}
 			}
-			
 		}
 		
+		
 	}
+
+	
+	
+	
+
+
 }

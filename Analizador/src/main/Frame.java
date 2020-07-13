@@ -7,11 +7,13 @@
  - Rodelo Cardenas Graciela.
 */
 
-package Aplicacion;
+package main;
 
 import java.awt.Color;
 
 import javax.swing.JFrame;
+
+import Aplicacion.Panel;
 
 public class Frame extends JFrame{
 	Panel a = new Panel();
@@ -24,5 +26,8 @@ public class Frame extends JFrame{
 		a.setSize(800, 600);
 		this.add(a);
 		
+	}
+	public static void main(String[] args) {
+		new Frame();
 	}
 }

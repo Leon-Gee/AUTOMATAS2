@@ -12,73 +12,81 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.*;
 
-import event.EventoBotones;
+import event.eventMngr;
 
 public class Panel extends JPanel {
 	/**
 	 * 
 	 */
 	
-	private JTextArea escribir;
-	private JTextArea resultado;
-	private JTextArea renglones;
-	private JScrollPane contiene1;
-	private JScrollPane contiene2;
-	private JButton abrirArchivo;
-	private JButton guardarArchivo;
-	private JButton analizar;
-	private JButton salir;
-	private JTabbedPane consolaTabla;
-	private EventoBotones eventos;
+	private JTextArea txtEscribir;
+	private JTextArea txtResultado;
+	private JTextArea txtRenglones;
+	private JScrollPane scbContiene;
+	private JScrollPane scbContiene2;
+	private JButton btnAbrirArchivo;
+	private JButton btnGuardarArchivo;
+	private JButton btnAnalizar;
+	private JButton btnSalir;
+	private JTabbedPane tpnConsolaTabla;
+	private eventMngr eventos;
 	private int lineas = 1;
-	private JScrollPane scrollRenglones;
+	private JScrollPane scbRenglones;
 	
 	public Panel() {
 		setLayout(null); 
-		consolaTabla = new JTabbedPane();
+		tpnConsolaTabla = new JTabbedPane();
 		//--------------------------------------------------
 		//---- CONTENEDOR PARA VER EL NUMERO DE RENGLON ----
 		//--------------------------------------------------
-		renglones = new JTextArea();
-		renglones.setFont(new Font("Consolas",0,12));
-		renglones.setBorder(BorderFactory.createLineBorder( Color.BLACK, 1 ));
-		renglones.setEditable(false);
-		renglones.setText("1\n");
+		txtRenglones = new JTextArea();
+		txtRenglones.setFont(new Font("Consolas",0,12));
+		txtRenglones.setBorder(BorderFactory.createLineBorder( Color.BLACK, 1 ));
+		txtRenglones.setEditable(false);
+		txtRenglones.setText("1\n");
 		
-		scrollRenglones = new JScrollPane(renglones);
-		scrollRenglones.setBounds(6, 10, 24, 400);
-		scrollRenglones.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scbRenglones = new JScrollPane(scbRenglones);
+		scbRenglones.setBounds(6, 10, 24, 400);
+		scbRenglones.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		// -----------------------------------------
 		 
 		//-----------------------------------------
 		//---- CONTENEDOR PARA ESCRIBIR CODIGO ----
 		//-----------------------------------------
-		escribir = new JTextArea(2000,1000);
-		escribir.setFont(new Font("Consolas",0,12));
+		txtEscribir = new JTextArea(2000,1000);
+		txtEscribir.setFont(new Font("Consolas",0,12));
 		
 		
 		
-		contiene1 = new JScrollPane(escribir);
-		contiene1.setWheelScrollingEnabled(true);
-		contiene1.setBounds(30,10,600,400);
-		contiene1.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+		scbContiene = new JScrollPane(txtEscribir);
+		scbContiene.setWheelScrollingEnabled(true);
+		scbContiene.setBounds(30,10,600,400);
+		scbContiene.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
             @Override
             public void adjustmentValueChanged(AdjustmentEvent e) {
-                scrollRenglones.getVerticalScrollBar().setValue(contiene1.getVerticalScrollBar().getValue());
+                scbRenglones.getVerticalScrollBar().setValue(scbContiene.getVerticalScrollBar().getValue());
             }
         });
 		
 		// -----------------------------------------
 		
-		resultado = new JTextArea("Building in process...");
+		txtResultado = new JTextArea("Building in process...");
 		
-		eventos = new EventoBotones(escribir, renglones, resultado,consolaTabla);
-		escribir.addKeyListener(eventos.linea);
+		eventos = new eventMngr(this);
+		txtEscribir.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyPressed(KeyEvent e) {
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		        	txtRenglones.append(++lineas + "\n");
+		        }
+		    }     
+		});
 		
 		
 	      
@@ -86,49 +94,95 @@ public class Panel extends JPanel {
 		// ---- SELECCIONAR UN ARCHIVO EXISTENTE ----
 		// ------------------------------------------
 		
-		abrirArchivo = new JButton(" Abrir Archivo");
-		abrirArchivo.setBounds(640,10,130,20);
-		abrirArchivo.addActionListener(eventos.abrir);
+		btnAbrirArchivo = new JButton(" Abrir Archivo");
+		btnAbrirArchivo.setBounds(640,10,130,20);
+		btnAbrirArchivo.addActionListener(new eventMngr(this));
 		
 		// ------------------------------------------
 		
 		// ------------------------------------------
 		// ------ GUARDAR UN ARCHIVO CREADO ---------
 		// ------------------------------------------
-		guardarArchivo = new JButton("Guardar Archivo");
-		guardarArchivo.setBounds(640, 50, 130,20);
-		guardarArchivo.addActionListener(eventos.guardar);
+		btnGuardarArchivo = new JButton("Guardar Archivo");
+		btnGuardarArchivo.setBounds(640, 50, 130,20);
+		btnGuardarArchivo.addActionListener(new eventMngr(this));
 		//-------------------------------------------
 		// ANALIZAR
-		analizar = new JButton("Analizar");
-		analizar.setBounds(640, 90, 130, 20);
-		analizar.addActionListener(eventos.analizar);
+		btnAnalizar = new JButton("Analizar");
+		btnAnalizar.setBounds(640, 90, 130, 20);
+		btnAnalizar.addActionListener(new eventMngr(this));
 		// SALIR 
-		salir = new JButton("Salir");
-		salir.setBounds(640,130,130,20);
-		salir.addActionListener(eventos.salir);
+		btnSalir = new JButton("Salir");
+		btnSalir.setBounds(640,130,130,20);
+		btnSalir.addActionListener(new eventMngr(this));
 		
 		
 		
-		contiene2 = new JScrollPane(resultado);
+		scbContiene2 = new JScrollPane(txtResultado);
 		
-		contiene2.setWheelScrollingEnabled(true);
-		contiene2.setSize(750, 120);
+		scbContiene2.setWheelScrollingEnabled(true);
+		scbContiene2.setSize(750, 120);
 		
-		consolaTabla.add("Consola",contiene2);
-		consolaTabla.setBounds(30,425,600,120);
-		resultado.setEditable(false);
+		tpnConsolaTabla.add("Consola",scbContiene2);
+		tpnConsolaTabla.setBounds(30,425,600,120);
+		txtResultado.setEditable(false);
 		
 		
-		add(scrollRenglones);
-		add(contiene1);
-		add(abrirArchivo);
-	    add(guardarArchivo);
-	    add(analizar);
-	    add(consolaTabla);
-		add(salir);
+		add(scbRenglones);
+		add(scbContiene);
+		add(btnAbrirArchivo);
+	    add(btnGuardarArchivo);
+	    add(btnAnalizar);
+	    add(tpnConsolaTabla);
+		add(btnSalir);
 	    
 	}
+
+	public JTextArea getTxtEscribir() {
+		return txtEscribir;
+	}
+
+	public JTextArea getTxtResultado() {
+		return txtResultado;
+	}
+
+	public JTextArea getTxtRenglones() {
+		return txtRenglones;
+	}
+
+	public JScrollPane getScbContiene() {
+		return scbContiene;
+	}
+
+	public JScrollPane getScbContiene2() {
+		return scbContiene2;
+	}
+
+	public JButton getBtnAbrirArchivo() {
+		return btnAbrirArchivo;
+	}
+
+	public JButton getBtnGuardarArchivo() {
+		return btnGuardarArchivo;
+	}
+
+	public JButton getBtnAnalizar() {
+		return btnAnalizar;
+	}
+
+	public JButton getBtnSalir() {
+		return btnSalir;
+	}
+
+	public JTabbedPane getTpnConsolaTabla() {
+		return tpnConsolaTabla;
+	}
+
+	public JScrollPane getScbRenglones() {
+		return scbRenglones;
+	}
+	
+	
 	
 
 	
