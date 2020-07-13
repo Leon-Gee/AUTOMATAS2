@@ -7,7 +7,7 @@
  - Rodelo Cardenas Graciela.
 */
 
-package proyecto;
+package Aplicacion;
 
 import java.awt.Color;
 

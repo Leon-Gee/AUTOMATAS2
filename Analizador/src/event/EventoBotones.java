@@ -1,12 +1,5 @@
-/*
- PROYECTO ANALIZADOR LEXICO Y SINTACTICO
- INTEGRANTES:
- - Garcia Aispuro Alan Gerardo.
- - Meza Leon Oscar Oswaldo.
- - Osuna Lizarraga Rubi Guadalupe.
- - Rodelo Cardenas Graciela.
-*/
-package proyecto;
+
+package event;
 
 import java.awt.event.*;
 import java.io.*;
@@ -14,18 +7,20 @@ import java.util.StringTokenizer;
 
 import javax.swing.*;
 
+import clasesBase.Palabritas;
+
 public class EventoBotones {
-	AbrirArchivo abrir;
-	GuardarArchivo guardar;
-	Analizar analizar;
-	Salir salir;
-	Lineas linea;
-	JFileChooser escoger;
-	JTextArea renglones;
-	int lineas;
-	JTextArea texto;
-	JTextArea resultado;
-	JTabbedPane consolaTabla;
+	private AbrirArchivo abrir;
+	private GuardarArchivo guardar;
+	private Analizar analizar;
+	private Salir salir;
+	private Lineas linea;
+	private JFileChooser escoger;
+	private JTextArea renglones;
+	private int lineas;
+	private JTextArea texto;
+	private JTextArea resultado;
+	private	JTabbedPane consolaTabla;
 	
 	public EventoBotones(JTextArea txt, JTextArea reng, JTextArea result, JTabbedPane cT) {
 		
@@ -75,12 +70,12 @@ public class EventoBotones {
 		public void actionPerformed(ActionEvent arg0) {
 			Palabritas palabritas = new Palabritas(texto.getText());
 			palabritas.analizador();
-			resultado.setText(palabritas.errorL);
+			resultado.setText(palabritas.getErrorL());
 			if(consolaTabla.getTabCount()> 1)
 				consolaTabla.removeTabAt(1);
 			
 			JScrollPane contiene1;
-			contiene1 = new JScrollPane(new JTable(palabritas.filas,palabritas.columnas));
+			contiene1 = new JScrollPane(new JTable(palabritas.getFilas(),palabritas.getColumnas()));
 			contiene1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 			consolaTabla.add("Tabla Simbolos",contiene1);
 		}

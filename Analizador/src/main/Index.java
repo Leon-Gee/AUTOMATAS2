@@ -7,13 +7,15 @@
  - Rodelo Cardenas Graciela.
 */
 
-package proyecto;
+package main;
 
 import java.io.File;
 
-public class Index {
-
-	public static void main(String[] args) {
-		new Frame();
+import Aplicacion.Frame;
+	
+	public class Index {
+	
+		public static void main(String[] args) {
+			new Frame();
+		}
 	}
-}

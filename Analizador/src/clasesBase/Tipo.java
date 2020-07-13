@@ -6,7 +6,7 @@
  - Osuna Lizarraga Rubi Guadalupe.
  - Rodelo Cardenas Graciela.
 */
-package proyecto;
+package clasesBase;
 
 public interface Tipo {
 	

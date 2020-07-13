@@ -6,7 +6,7 @@
  - Osuna Lizarraga Rubi Guadalupe.
  - Rodelo Cardenas Graciela.
 */
-package proyecto;
+package Aplicacion;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -17,24 +17,26 @@ import java.awt.event.KeyListener;
 
 import javax.swing.*;
 
+import event.EventoBotones;
+
 public class Panel extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L; // Esto me lo pedía por heredar de JPanel xD
-	JTextArea escribir;
-	JTextArea resultado;
-	JTextArea renglones;
-	JScrollPane contiene1;
-	JScrollPane contiene2;
-	JButton abrirArchivo;
-	JButton guardarArchivo;
-	JButton analizar;
-	JButton salir;
-	JTabbedPane consolaTabla;
-	EventoBotones eventos;
-	int lineas = 1;
-	JScrollPane scrollRenglones;
+	
+	private JTextArea escribir;
+	private JTextArea resultado;
+	private JTextArea renglones;
+	private JScrollPane contiene1;
+	private JScrollPane contiene2;
+	private JButton abrirArchivo;
+	private JButton guardarArchivo;
+	private JButton analizar;
+	private JButton salir;
+	private JTabbedPane consolaTabla;
+	private EventoBotones eventos;
+	private int lineas = 1;
+	private JScrollPane scrollRenglones;
 	
 	public Panel() {
 		setLayout(null); 

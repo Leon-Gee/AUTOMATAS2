@@ -6,10 +6,12 @@
  - Osuna Lizarraga Rubi Guadalupe.
  - Rodelo Cardenas Graciela.
 */
-package proyecto;
+package clasesBase;
 
 import java.util.*;
 import java.util.regex.*;
+
+import arbolSintactico.Sintactico;
 
 public class Palabritas implements Tipo {
 	private final String[] palabras = {"public", "class", "int", "boolean", 
@@ -24,9 +26,9 @@ public class Palabritas implements Tipo {
 	private Pattern patron2;
 	private Pattern patron3;
 	private Matcher verificar, veri;
-	String columnas[];
-	String filas[][];
-	String errorL = " LECTURA DE CODIGO COMPLETADA.\n";
+	private String columnas[];
+	private String filas[][];
+	private String errorL = " LECTURA DE CODIGO COMPLETADA.\n";
 	int numerito;
 	
 	public Palabritas(String cod) {
@@ -378,5 +380,25 @@ public class Palabritas implements Tipo {
 	// Muahahaha
 	// Si ves esto Alan, hola uwu
 	// No se uando diste el control uwu
+	public String getErrorL() {
+		return errorL;
+	}
+	public void setErrorL(String errorL) {
+		this.errorL = errorL;
+	}
+	public String[] getColumnas() {
+		return columnas;
+	}
+	public void setColumnas(String[] columnas) {
+		this.columnas = columnas;
+	}
+	public String[][] getFilas() {
+		return filas;
+	}
+	public void setFilas(String[][] filas) {
+		this.filas = filas;
+	}
+	
+	
 	
 }

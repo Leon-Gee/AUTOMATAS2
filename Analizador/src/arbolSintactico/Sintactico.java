@@ -6,9 +6,12 @@
  - Osuna Lizarraga Rubi Guadalupe.
  - Rodelo Cardenas Graciela.
 */
-package proyecto;
+package arbolSintactico;
 
 import java.util.ArrayList;
+
+import clasesBase.Tipo;
+import clasesBase.Token;
 
 public class Sintactico implements Tipo {
 	private static ArrayList<Integer> llaves = new ArrayList<Integer>();
@@ -27,8 +30,8 @@ public class Sintactico implements Tipo {
 				if(!tokens.get(linea).isEmpty()) {
 					while(checar < tokens.get(linea).size()) {
 						finalizar = false;
-						if(linea == 0 && checar == 0) {
-							if(tokens.get(linea).get(checar).getTipo() != CLASS)
+						if(linea == 1 && checar == 0) {
+							if(tokens.get(linea).get(checar).getTipo() != CLASS )
 								errores = error(null,linea,"class");
 						}
 						if(linea!=0 && tokens.get(linea).get(checar).getTipo() != CLASS)
