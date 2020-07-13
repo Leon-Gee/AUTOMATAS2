@@ -115,9 +115,4 @@ public class eventMngr implements ActionListener{
 		
 	}
 
-	
-	
-	
-
-
 }

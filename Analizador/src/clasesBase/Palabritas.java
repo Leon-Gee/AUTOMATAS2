@@ -20,6 +20,7 @@ public class Palabritas implements Tipo {
 	private final String[] signos = {"+","-", "*", "<", "=", /* / */ 
 			"(", ")", "[", "]", "{", "}", "&&", ";", ",", ".","!"}; //OMG TENGO CONTROOOOL
 	private ArrayList<ArrayList<Token>> tokens = new ArrayList<ArrayList<Token>>();
+	private HashMap<String, TablaSimbolos> tablaSimbolos;
 	private String codigo, token;
 	private StringTokenizer tokenizador, lexico;
 	private Pattern patron;
@@ -206,6 +207,8 @@ public class Palabritas implements Tipo {
 		
 	}
 	private void imprimirTabla() {
+		HashMap<String,TablaSimbolos> tablaSimbolos = new HashMap<String,TablaSimbolos>();
+		TablaSimbolos simboloAtributos;
 		errorL+= "ERRORES SEMÁNTICOS ENCONTRADOS: \n";
 		int noToken = 0, renglon = 0;
 		int x = 0;
@@ -291,6 +294,11 @@ public class Palabritas implements Tipo {
 				filas[fila][column] = valor;
 				
 				fila++;
+				
+				tablaSimbolos.put(variable, new TablaSimbolos(variable, tipo, renglon, valor));
+				simboloAtributos =  tablaSimbolos.get(variable);
+		        System.out.println(simboloAtributos.getNombre()+" "+simboloAtributos.getTipoDato()+" "+simboloAtributos.getPosicion()+" "+simboloAtributos.getValor());
+				
 				}
 				existe=false;
 				datoCorrecto=true;
