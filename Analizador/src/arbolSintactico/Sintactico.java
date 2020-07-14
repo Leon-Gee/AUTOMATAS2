@@ -500,6 +500,7 @@ public class Sintactico implements Tipo {
 					esp.add(SUMA);
 					esp.add(RESTA);
 					esp.add(POR);
+					esp.add(PARENTESIS_C);
 					esp.add(PUNTO_COMA);
 					break;
 				case SUMA:
@@ -528,6 +529,7 @@ public class Sintactico implements Tipo {
 					esp.add(POR);
 					esp.add(SUMA);
 					esp.add(RESTA);
+					esp.add(PUNTO_COMA);
 					posicion = i;
 					if(P_A.size()!=0)
 						P_A.remove(P_A.size()-1);
@@ -678,7 +680,9 @@ public class Sintactico implements Tipo {
 		ArrayList<Integer> P_A = new ArrayList<Integer>();
 
 		int posicion = 0;
+		boolean isMenor = false;
 		for(int i = checar;i<tokens.size();i++) {
+			
 			for(int q = 0;q<esp.size();q++) {
 				if(esp.get(q) == tokens.get(i).getTipo()) {
 					for(int a = esp.size()-1;a>=0;a--) {
@@ -688,6 +692,7 @@ public class Sintactico implements Tipo {
 				}
 			}
 			int tipo = tokens.get(i).getTipo();
+			
 			if(esp.size() == 0) {
 				if(tipo == IDENT)
 					esp.add(IGUAL);
@@ -706,8 +711,16 @@ public class Sintactico implements Tipo {
 					esp.add(AND); 
 					esp.add(PARENTESIS_C);
 				}
-				if(tipo == IDENT || tipo == TRUE || tipo == FALSE || tipo == PARENTESIS_C)
+				if(tipo == IDENT || tipo == TRUE || tipo == FALSE || tipo == PARENTESIS_C) {
 					esp.add(PUNTO_COMA);
+					
+				}
+				if(tipo == NUM && isMenor) {
+					esp.add(PUNTO_COMA);
+					isMenor = false;
+				}
+				if(tipo==MENOR)
+					isMenor = true;
 				if(tipo == IGUAL || tipo == AND) {
 					esp.add(TRUE);
 					esp.add(FALSE);
@@ -751,13 +764,16 @@ public class Sintactico implements Tipo {
 				}
 			}//khe? nose xdxdxd
 			int tipo = tokens.get(i).getTipo();
+			boolean isIgual = false;
 			if(esp.size() == 0) {
 				if(tipo == IDENT ) {
 					esp.add(IGUAL);
 					esp.add(CORCHETE_A);
-					if(i!=checar)
+					esp.add(MENOR);
+					if(i!=checar && isIgual)
 						esp.add(PUNTO_COMA);
 				}
+				isIgual = ( tipo == IGUAL );
 				if(tipo == THIS || tipo == IDENT) {
 					esp.add(PUNTO);
 				}
@@ -790,6 +806,7 @@ public class Sintactico implements Tipo {
 					}
 					if (tipo==IGUAL)
 						esp.add(NUM);
+					
 				}
 				
 				if(tipo == NUM || tipo == LENGTH || tipo == CORCHETE_C || tipo == PUNTO_COMA || tipo == PARENTESIS_C) {
