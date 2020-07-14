@@ -72,29 +72,15 @@ public class Semantico implements Tipo {
 				}
 				//Verificar el tipo de dato
 				if (tipo.equals("int")) {
-					boolean valido=false;
-					char numeros []= {'0','1','2','3','4','5','6','7','8','9','+','-','*','/'};
-					for (int a=0; a<valor.length();a++) {
-						for (int b=0; b<numeros.length;b++) {
-							if (valor.charAt(a)==numeros[b]) {
-								valido=true;
-								break;
-							}
-						}
-						if (!valido) {
-							errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO INT Y LE INTENTA COLOCAR EL VALOR: ***" + valor+"***.\n"; 	
-							valido=false;
-							datoCorrecto=false;
-							break;
-						}
-					}
-	
+					datoCorrecto = isEntero(variable,valor);
+					if(!datoCorrecto) 
+						errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO INT Y LE INTENTA COLOCAR EL VALOR: ***" + valor+"***.\n"; 	
 				}
 				if (tipo.equals("boolean")) {
-					if ((!(valor.equals("true "))) && (!(valor.equals("false ")))) {
+					datoCorrecto = isBoolean(variable,valor);
+					if(!datoCorrecto) 
 						errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO BOOLEAN Y LE INTENTA COLOCAR EL VALOR: ***" + valor+"***.\n"; 	
-						datoCorrecto=false;
-					}
+				
 				}
 				if (!existe&&datoCorrecto) {
 					filas[fila][column] = variable;
@@ -129,34 +115,27 @@ public class Semantico implements Tipo {
 	 * 
 	 * */
 	private boolean isEntero(String variable, String valor) {
-		String errorL = "";
-		boolean valido=true;
+		boolean valido=false;
 		char numeros []= {'0','1','2','3','4','5','6','7','8','9','+','-','*','/'};
 		for (int a=0; a<valor.length();a++) {
 			for (int b=0; b<numeros.length;b++) {
 				if (valor.charAt(a)==numeros[b]) {
-					return false;
+					valido=true;
+					break;
 				}
+			}
+			if (!valido) {
+				valido=false;
+				break;
 			}
 		}
 		return valido;
 	}
 	private boolean isBoolean(String variable, String valor) {
-		boolean error = true; 
-		if ((!(valor.equals("true"))) && (!(valor.equals("false")))) {
-			return false;
-		}else {
-			StringTokenizer token = new StringTokenizer(valor);
-			String tok = "";
-			while(token.hasMoreTokens()) {
-				tok = token.nextToken();
-				if( !tok.equals("&&") && !tok.equals("<") && !tok.equals("!"))
-					if(tok.matches("[a-zA-Z]+([a-zA-Z0-9])*"))
-						if(tablaSimbolos.containsKey(tok))
-							if(!tablaSimbolos.get(tok).getTipoDato().contentEquals("boolean"))
-								return false;
-			}
+		boolean datoCorrecto = true; 
+		if ((!(valor.equals("true "))) && (!(valor.equals("false ")))) {
+			datoCorrecto = false;
 		}
-		return error;
+		return datoCorrecto;
 	}
 }

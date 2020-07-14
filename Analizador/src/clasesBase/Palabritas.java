@@ -37,20 +37,7 @@ public class Palabritas implements Tipo {
 		codigo = cod;
 	}
 
-	public int getnumLineas() {
-		return tokens.size();
-	}
-	public int getnumColumnasLinea(int lin) {
-		return tokens.get(lin).size();
-	}
-	public Token getToken(int linea,int column){
-		Token lex = null;
-		if(tokens.size() < linea)
-			if(tokens.get(linea).size() < column)		
-				return tokens.get(linea).get(column);
-				
-		return lex;
-	}
+	
 	public JTable tablaSimbolos() {
 		return new JTable(semantico.getFilas(), semantico.getColumnas());
 	}
