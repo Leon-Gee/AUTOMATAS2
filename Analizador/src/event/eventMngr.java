@@ -20,8 +20,6 @@ public class eventMngr implements ActionListener{
 	public	JTabbedPane consolaTabla;
 	
 	public eventMngr(Panel pan) {
-		
-	
 		panel = pan;
 		lineas = 1;
 		texto = panel.getTxtEscribir();

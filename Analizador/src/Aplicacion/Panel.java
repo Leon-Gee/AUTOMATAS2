@@ -46,10 +46,12 @@ public class Panel extends JPanel {
 		//---- CONTENEDOR PARA VER EL NUMERO DE RENGLON ----
 		//--------------------------------------------------
 		txtRenglones = new JTextArea();
+		
 		txtRenglones.setFont(new Font("Consolas",0,12));
 		txtRenglones.setBorder(BorderFactory.createLineBorder( Color.BLACK, 1 ));
-		txtRenglones.setEditable(false);
 		txtRenglones.setText("1\n");
+	
+		
 		
 		scbRenglones = new JScrollPane(scbRenglones);
 		scbRenglones.setBounds(6, 10, 24, 400);
@@ -87,7 +89,7 @@ public class Panel extends JPanel {
 		        }
 		    }     
 		});
-		
+	
 		
 	      
 		// ------------------------------------------
