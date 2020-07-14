@@ -705,6 +705,10 @@ public class Sintactico implements Tipo {
 					esp.add(IDENT);
 					if(tipo == PARENTESIS_A || tipo == MENOR)
 						esp.add(NUM);
+					if(tipo==IGUAL) {
+						esp.add(NUM);
+						esp.add(NEGACION);
+					}
 				}
 				if(tipo == IDENT || tipo == NUM) {
 					esp.add(MENOR);

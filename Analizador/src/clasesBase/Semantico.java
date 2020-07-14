@@ -29,7 +29,7 @@ public class Semantico implements Tipo {
 	public String generarTablaSimbolos() {
 		TablaSimbolos simboloAtributos;
 		errorL = "";
-		errorL+= "ERRORES SEMÃ�NTICOS ENCONTRADOS: \n";
+		errorL+= "ERRORES SEMANTICOS ENCONTRADOS: \n";
 		int noToken = 0, renglon = 0;
 		int x = 0;
 		columnas[0] = "Nombre";
@@ -82,11 +82,11 @@ public class Semantico implements Tipo {
 				}
 				//Verificar el tipo de dato
 				if (tipo.equals("int")) {
-					datoCorrecto = declaracionEntero(variable,valor,renglon);
+					datoCorrecto = verificarInt(variable,valor,renglon,tipo);
 					
 				}
 				if (tipo.equals("boolean")) {
-					datoCorrecto = declaracionBoolean(variable,valor,renglon);
+					datoCorrecto = verificarBoolean(variable,valor,renglon,tipo);
 					
 				}
 				if (!existe&&datoCorrecto) {
@@ -115,10 +115,10 @@ public class Semantico implements Tipo {
 					errorL+= "ERROR SEMANTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICIÃ“N: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
 				else {
 					if(tablaSimbolos.get(variable).getTipoDato() == "int") {
-						datoCorrecto=usoEntero(variable,valor,renglon);
+						datoCorrecto=usoEntero(variable,valor,renglon,tipo);
 					}
 					if(tablaSimbolos.get(variable).getTipoDato() == "boolean") {
-						datoCorrecto=usoBoolean(variable,valor,renglon);
+						datoCorrecto=usoBoolean(variable,valor,renglon,tipo);
 					}
 					
 						if(datoCorrecto) {
@@ -136,54 +136,10 @@ public class Semantico implements Tipo {
 		return errorL;
 	}
 	
-	//VERIFICACIÓN DE LAS DECLARACIONES DE VARIABLES
-	 //Tipo INT
-	private boolean declaracionEntero(String variable, String valor,int renglon) {
-		//Verificar los operadores 
-		
-		boolean insertar=true;
-		boolean valido=false;
-		char numeros []= {'0','1','2','3','4','5','6','7','8','9','+','-','*','/'};
-		for (int a=0; a<valor.length();a++) {
-			for (int b=0; b<numeros.length;b++) {
-				if (valor.charAt(a)==numeros[b]) {
-					valido=true;
-					break;
-				}
-			}
-			if (!valido) {
-				errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO INT Y LE INTENTA COLOCAR EL VALOR: ***" + valor+"***.\n"; 	
-				valido=false;
-				insertar=false;
-				break;
-			}
-			//VERIFICACION DE OPERADORES LÓGICOS
-			if(valor.charAt(a)=='&' && valor.charAt(a+1)=='&') {
-				a++;
-				errorL+="Intenta usar el operador lógico: && para asignar valor a la variable*** "+variable+"*** de tipo ***Int*** en el renglon "+renglon+".\n";
-				insertar=false;
-			}
-			else if(valor.charAt(a)=='!'||valor.charAt(a)=='<'||valor.charAt(a)=='>') {
-				errorL+="Intenta usar el operador lógico: "+valor.charAt(a)+ " para asignar valor a la variable*** "+variable+"*** de tipo ***Int***en el renglon: "+renglon+".\n";
-				insertar=false;
-			}
-		}
-		return insertar;
-	}
-	//Tipo Boolean
-	private boolean declaracionBoolean(String variable, String valor,int renglon) {
-		boolean insertar=true;
-		boolean valido=false;
-		if ((!(valor.equals("true "))) && (!(valor.equals("false ")))) {
-			errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO BOOLEAN Y LE INTENTA COLOCAR EL VALOR: ***" + valor+"***.\n"; 	
-			insertar=false;
-		}
-		return insertar;
-	}
 	//Verificación cuando las variables son usadas
 	//Tipo Int
-	private boolean usoEntero(String variable, String valor,int renglon) {
-		int cambiar=0;
+	private boolean usoEntero(String variable, String valor,int renglon, String tipo) {
+		boolean modificar=true;
 		//Ver si está declarada
 		if(!tablaSimbolos.containsKey(variable))
 			errorL+= "ERROR SEMÁNTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
@@ -191,9 +147,44 @@ public class Semantico implements Tipo {
 			//Darle un valor nuevo al que tenía
 			TablaSimbolos verificar= tablaSimbolos.get(variable);
 			if(!verificar.getValor().equals(valor)) {
+				modificar=verificarInt(variable,valor,renglon,tipo);
+			}
+		
+		}
+
+		if(modificar) {
+			tablaSimbolos.get(variable).setValor(valor);
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	//TipoBoolean
+	public boolean usoBoolean (String variable, String valor,int renglon,String tipo) {
+		boolean cambiarValor=true;
+		//Ver si está declarada
+		if(!tablaSimbolos.containsKey(variable))
+			errorL+= "ERROR SEMÁNTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+		else {
+			//Darle un valor nuevo al que tenía
+			TablaSimbolos verificar= tablaSimbolos.get(variable);
+			
+			if(!verificar.getValor().equals(valor)) {
+						cambiarValor=verificarBoolean(variable,  valor, renglon, tipo);
+			}
+		}
+		if(cambiarValor)
+			tablaSimbolos.get(variable).setValor(valor);
+		return cambiarValor;
+	}
+	
+	//VERIFICACION DE VARIABLES
+	//Verificación de los Int
+	private boolean verificarInt (String variable, String valor,int renglon,String tipo) {
+		int cambiar=0, identCorrec=0;
+			//VERIFICACION DE OPERADORES LÓGICOS
 				for (int a=0; a<valor.length();a++) {
-					
-					//VERIFICACION DE OPERADORES LÓGICOS
 					if(valor.charAt(a)=='&' && valor.charAt(a+1)=='&') {
 						a++;
 						errorL+="Intenta usar el operador lógico: && para asignar valor a la variable*** "+variable+"*** de tipo ***Int*** en el renglon "+renglon+".\n";
@@ -204,24 +195,27 @@ public class Semantico implements Tipo {
 						cambiar++;
 					}
 				}
+				
 				//Ver que el valor que le pongo no es boleano
 					if(valor.equals("true ")||valor.equals("false ")) {
 						errorL+="Intenta asignar un valor ***boolean*** en la variable *** "+variable+"*** que es ***int***"+ " en la línea: "+renglon+ ".\n";
 						cambiar++;
 						
 					}
-					
 					//Buscar que los identificadores usados estén correctos
 					else {
 						if(!valorIdentificador.isEmpty()) {
 							for(int r=0; r<valorIdentificador.size();r++) {
 								//Verificar que exista
 								if(tablaSimbolos.containsKey(valorIdentificador.get(r))) {
+									System.out.println("entro aqui");
+									System.out.println(valor);
 									//Si existe verificamos el tipo de dato
-									if(!tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals(tablaSimbolos.get(variable).getTipoDato())){
-										errorL+="Intenta asignar un tipo de dato*** "+tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato()+ " ***al usar la variable*** "+ valorIdentificador.get(r)+ " ***en un dato*** "+ tablaSimbolos.get(variable).getTipoDato()+ " ***línea: "+ renglon+ ".\n";
+									if(!tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals(tipo)){
+									errorL+="Intenta asignar un tipo de dato*** "+tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato()+ " ***al usar la variable*** "+ valorIdentificador.get(r)+ " ***en un dato*** "+ tipo + " ***línea: "+ renglon+ ".\n";
 										cambiar++;
 									}
+									else identCorrec++;
 								}
 								else
 								{
@@ -230,63 +224,115 @@ public class Semantico implements Tipo {
 								}
 							}
 						}
-						valorIdentificador.clear();
-		
-							
+						
+
 					}
-				
+						if(cambiar==0) {
+			//Verificar si hay números u operadores 
+			char numeros []= {'0','1','2','3','4','5','6','7','8','9','+','-','*','/'};
+			for (int a=0; a<valor.length();a++) {
+				for (int b=0; b<numeros.length;b++) {
+					if (valor.charAt(a)==numeros[b]) {
+						cambiar=1000;
+						break;
+					}
+				}
+				if (cambiar!=1000 && identCorrec==0) {
+					errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO INT Y LE INTENTA COLOCAR EL VALOR: ***" + valor+"***.\n"; 	
+					break;
+				}
+		
 			}
-			
 		}
-		if(cambiar==0) {
-			tablaSimbolos.get(variable).setValor(valor);
+		if(cambiar==0||cambiar==1000) {
+			valorIdentificador.clear();
 			return true;
 		}
-		else
+		else {
+			valorIdentificador.clear();
 			return false;
-		
+		}
 		
 	}
-	//TipoBoolean
-	public boolean usoBoolean (String variable, String valor,int renglon) {
+	private boolean verificarBoolean (String variable, String valor,int renglon,String tipo) {
 		boolean cambiarValor=true;
-		//Ver si está declarada
-		if(!tablaSimbolos.containsKey(variable))
-			errorL+= "ERROR SEMÁNTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
-		else {
-			//Darle un valor nuevo al que tenía
-			TablaSimbolos verificar= tablaSimbolos.get(variable);
-			
-			if(!verificar.getValor().equals(valor)) {
-						if(!valorIdentificador.isEmpty()) {
-						for(int r=0; r<valorIdentificador.size();r++) {
-							//Verificar que exista
-							if(tablaSimbolos.containsKey(valorIdentificador.get(r))) {
-								//Si existe verificamos el tipo de dato
-								if(!tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals(tablaSimbolos.get(variable).getTipoDato())){
-									errorL+="Intenta asignar un tipo de dato*** "+tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato()+ " ***al usar la variable*** "+ valorIdentificador.get(r)+ " ***en un dato*** "+ tablaSimbolos.get(variable).getTipoDato()+ " ***línea: "+ renglon+ ".\n";
-									cambiarValor=false;
-								}
+		int numerito=0; int identificador=0;
+		if ((!(valor.equals("true "))) && (!(valor.equals("false ")))) {
+			//Verificar que sea un identificador
+			if(!valorIdentificador.isEmpty()) {
+				for(int r=0; r<valorIdentificador.size();r++) {
+					System.out.println(valorIdentificador.get(r));
+					//Verificar que exista
+					if(tablaSimbolos.containsKey(valorIdentificador.get(r))) {
+						identificador++;
+						//Si existe verificamos el tipo de dato
+						if(!tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals(tipo)){
+							//Verificar si se trata de int
+							if(tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals("int")) {
+								identificador++;
+								//Verifico que haya un números o signos
+								char numeros []= {'0','1','2','3','4','5','6','7','8','9','&','<','>','!'};
+								for (int a=0; a<valor.length();a++) {
+									for (int b=0; b<numeros.length;b++) {
+										if (valor.charAt(a)==numeros[b]) {
+											numerito=300;
+											break;
+										}
+										if (b==numeros.length-1&&numerito!=300&&identificador==0) {
+											cambiarValor=false;
+											
+										}
+										if(valor.charAt(a)=='+'||valor.charAt(a)=='-'||valor.charAt(a)=='*'||valor.charAt(a)=='/') {
+											errorL+="Intenta asignar un tipo de operando*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***línea: "+ renglon+ ".\n";
+											cambiarValor=false;
+											
+										}
+									}
 							}
-							else
-							{
-								cambiarValor=false;
-								errorL+="La variable: "+valorIdentificador.get(r)+ " que intenta usar en la linea "+ renglon+ " no existe"+".\n";
-							}
+							
 						}
-						valorIdentificador.clear();
+							else {
+								errorL+="Intenta asignar un tipo de dato*** "+tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato()+ " ***al usar la variable*** "+ valorIdentificador.get(r)+ " ***en un dato*** "+ tipo+ " ***línea: "+ renglon+ ".\n";
+							cambiarValor=false;
+							}
 					}
 						
-					else {
-						errorL+="Intenta asignar un valor ***int*** en la variable *** "+ variable+"*** que es ***boolean***"+ " en la línea: "+renglon+ ".\n";
+					
+				}
+					else
+					{
 						cambiarValor=false;
+						
+						errorL+="La variable: "+valorIdentificador.get(r)+ " que intenta usar en la linea "+ renglon+ " no existe"+".\n";
 					}
-				
-				
+				valorIdentificador.clear();
 			}
+				
+			
 		}
-		if(cambiarValor)
-			tablaSimbolos.get(variable).setValor(valor);
+			//Si no son identificadores y son solo números
+			//Verifico que haya un números o signos
+			char numeros []= {'0','1','2','3','4','5','6','7','8','9','&','<','>','!'};
+			for (int a=0; a<valor.length();a++) {
+				for (int b=0; b<numeros.length;b++) {
+					if (valor.charAt(a)==numeros[b]) {
+						numerito=300;
+						break;
+					}
+					if (b==numeros.length-1&&numerito!=300&&identificador==0) {
+						cambiarValor=false;
+						System.out.println(identificador);
+					}
+					if(valor.charAt(a)=='+'||valor.charAt(a)=='-'||valor.charAt(a)=='*'||valor.charAt(a)=='/') {
+						errorL+="Intenta asignar un tipo de operando*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***línea: "+ renglon+ ".\n";
+						cambiarValor=false;
+						
+					}
+				}
+		}
+		
+	}
+		
 		return cambiarValor;
 	}
 	
