@@ -76,10 +76,8 @@ public class Semantico implements Tipo {
 					
 				}
 				if (tipo.equals("boolean")) {
-					datoCorrecto = isBoolean(variable,valor);
-					if(!datoCorrecto) 
-						errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO BOOLEAN Y LE INTENTA COLOCAR EL VALOR: *** " + valor +" ***.\n"; 	
-				
+					datoCorrecto = isBoolean(variable,valor,renglon);
+					
 				}
 				if (!existe&&datoCorrecto) {
 					filas[fila][column] = variable;
@@ -110,9 +108,7 @@ public class Semantico implements Tipo {
 						datoCorrecto = isEntero(variable,valor,renglon);
 					}
 					if(tablaSimbolos.get(variable).getTipoDato() == "boolean") {
-						datoCorrecto = isBoolean(variable,valor);
-						if(!datoCorrecto) 
-							errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO BOOLEAN Y LE INTENTA COLOCAR EL VALOR: *** " + valor+" ***.\n"; 	
+						datoCorrecto = isBoolean(variable,valor,renglon);
 					}
 					
 						if(datoCorrecto) {
@@ -128,9 +124,7 @@ public class Semantico implements Tipo {
 		}
 		return errorL;
 	}
-	/*
-	 * 
-	 * */
+	// Comprobación de errores para tipo de variables entero
 	private boolean isEntero(String variable, String valor,int renglon) {
 		boolean valido=true;
 		StringTokenizer token = new StringTokenizer(valor, " ");
@@ -138,8 +132,8 @@ public class Semantico implements Tipo {
 	    	String tok = token.nextToken(" ");
 	    	// SI SE TRATA DE UN IDENTIFICADOR
 	    	if(tok.matches("[a-zA-Z]+([a-zA-Z0-9])*")) {
-	    		if(tablaSimbolos.containsKey(tok)) {
-	    			if(!tablaSimbolos.get(tok).getTipoDato().equals("int")) {
+	    		if(tablaSimbolos.containsKey(tok)) { // QUE EL IDENTIFICADOR SE ENCUENTRE PREVIAMENTE DECLARADO
+	    			if(!tablaSimbolos.get(tok).getTipoDato().equals("int")) { // EL IDENTIFICADOR COINCIDE CON EL TIPO
 	    				errorL+="SE INTENTO USAR LA VARIABLE: ***"+ tok + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(tok).getTipoDato()+" *** EN UNA OPERACION DE INT EN LA LINEA "+ renglon + ".\n"; 	
 	    				valido = false;
 	    			}
@@ -150,13 +144,13 @@ public class Semantico implements Tipo {
 	    		
 	    	}else {
 	    		// SI HAY OPERADORES LOGICOS
-	    		if(tok.matches("[\\&&\\!\\<\\>]")) {
+	    		if(tok.matches("[\\&&\\!\\<\\>]")) { // PARA VER SI LA EXPRESION POSEE OPERANDOS LOGICOS
 	    			errorL+="ERROR SEMANTICO: INCOMPATIBILIDAD DE OPERANDOS *** " + tok + " *** NO SE PUEDEN USAR OPERADORES LOGICOS CON EL TIPO DE VARIABLE INT. \n"; 
 	    			valido = false;
 	    			continue;
 	    		}
 	    		// EN CASO DE QUE EXISTAN MAS COINCIDENCIAS.... 
-	    		if(!tok.matches("[0-9]+([0-9])*"))
+	    		if(!tok.matches("[0-9]+([0-9])*")) 
 	    			if(!tok.matches("[\\+\\-\\*\\/]"))  
 	    				if(!tok.matches("[\\(\\)]")) {
 	    					errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO INT Y LE INTENTA COLOCAR EL VALOR: *** " + valor+" ***.\n"; 
@@ -167,10 +161,35 @@ public class Semantico implements Tipo {
 	    }
 		return valido;
 	}
-	private boolean isBoolean(String variable, String valor) {
+	// COMPROBANDO EL TIPO DE BOOLEAN
+	private boolean isBoolean(String variable, String valor, int renglon) {
 		boolean datoCorrecto = true; 
 		StringTokenizer token = new StringTokenizer(valor, " ");
 		
+		while(token.hasMoreTokens()) {
+			String tok = token.nextToken(" ");
+			if(tok.matches("[a-zA-Z]+([a-zA-Z0-9])*")) {
+				if(tablaSimbolos.containsKey(tok)) {
+					if(!tablaSimbolos.get(tok).getTipoDato().equals("boolean")) {
+						errorL+="SE INTENTO USAR LA VARIABLE: ***"+ tok + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(tok).getTipoDato()+" *** EN UNA OPERACION DE BOOLEAN EN LA LINEA "+ renglon + ".\n"; 	
+						datoCorrecto = false;
+						continue;
+					}
+				}else {
+					errorL+= "ERROR SEMÁNTICO, LA VARIABLE: "+ tok+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+					datoCorrecto = false;
+					continue;
+				}
+			}
+			if(!tok.matches("[\\true\\false]"))
+				if(!tok.matches("[\\(\\)]"))
+					if(!tok.matches("[\\&&\\!\\<]")) {
+						errorL+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO BOOLEAN Y LE INTENTA COLOCAR EL VALOR: *** " + valor+" ***.\n"; 
+						datoCorrecto = false;
+						break;
+					}
+			
+		}
 		if ((!(valor.equals("true "))) && (!(valor.equals("false ")))) {
 			datoCorrecto = false;
 		}
