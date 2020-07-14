@@ -462,9 +462,7 @@ public class Sintactico implements Tipo {
 		for(int i = checar;i<tokens.size();i++) {
 			for(int q = 0;q<esp.size();q++) {
 				if(esp.get(q) == tokens.get(i).getTipo()) {
-					for(int a = esp.size()-1;a>=0;a--) {
-						esp.remove(a);
-					}
+					esp.clear();
 					break;
 				}
 			}
@@ -703,7 +701,7 @@ public class Sintactico implements Tipo {
 				}
 				if(tipo == BOOLEAN || tipo == PARENTESIS_A || tipo == IGUAL || tipo == MENOR || tipo == AND) {
 					esp.add(IDENT);
-					if(tipo == PARENTESIS_A || tipo == MENOR)
+					if(tipo == PARENTESIS_A || tipo == MENOR || tipo == IGUAL)
 						esp.add(NUM);
 				}
 				if(tipo == IDENT || tipo == NUM) {
