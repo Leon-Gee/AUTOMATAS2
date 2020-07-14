@@ -1,6 +1,7 @@
 package clasesBase;
 
 public class TablaSimbolos {
+	private int fila;
 	private String nombre;
 	private String tipoDato;
 	private int posicion;
@@ -10,13 +11,16 @@ public class TablaSimbolos {
 		
 	}
 	
-	public TablaSimbolos(String nom, String tipo, int pos, String val) {
+	public TablaSimbolos(String nom, String tipo, int pos, String val, int filaTabla) {
 		nombre = nom;
 		tipoDato = tipo;
 		posicion = pos;
 		valor = val;
+		fila = filaTabla;
 	}
-	
+	public int getFila() {
+		return fila;
+	}
 	public String getNombre() {
 		return nombre;
 	}

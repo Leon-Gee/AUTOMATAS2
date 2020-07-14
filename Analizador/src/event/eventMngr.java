@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 import javax.swing.*;
 
 import Aplicacion.Panel;
-import clasesBase.Palabritas;
+import clasesBase.*;
 
 public class eventMngr implements ActionListener{
 	private Panel panel;
@@ -58,14 +58,16 @@ public class eventMngr implements ActionListener{
 		}
 		//evento para boton analizar
 		if(e.getSource() == panel.getBtnAnalizar()) {
+			
 			Palabritas palabritas = new Palabritas(texto.getText());
+
 			palabritas.analizador();
 			resultado.setText(palabritas.getErrorL());
 			if(consolaTabla.getTabCount()> 1)
 				consolaTabla.removeTabAt(1);
 			
 			JScrollPane contiene1;
-			contiene1 = new JScrollPane(new JTable(palabritas.getFilas(),palabritas.getColumnas()));
+			contiene1 = new JScrollPane(palabritas.tablaSimbolos());
 
 			consolaTabla.add("Tabla Simbolos",contiene1);
 			

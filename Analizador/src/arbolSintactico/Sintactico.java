@@ -30,7 +30,7 @@ public class Sintactico implements Tipo {
 				if(!tokens.get(linea).isEmpty()) {
 					while(checar < tokens.get(linea).size()) {
 						finalizar = false;
-						if(linea == 1 && checar == 0) {
+						if(linea == 0 && checar == 0) {
 							if(tokens.get(linea).get(checar).getTipo() != CLASS )
 								errores = error(null,linea,"class");
 						}
@@ -84,7 +84,7 @@ public class Sintactico implements Tipo {
 								if(linea == tokens.size()-1 && llaves.size()!=0)
 									errores+=error(tokens.get(linea).get(checar),0,"}");
 								break;
-							default: // SEGUN YO AQUI ES YA CUALQUIER COSA NO ADMITIDA O ALGO ASÃ
+							default: // SEGUN YO AQUI ES YA CUALQUIER COSA NO ADMITIDA O ALGO ASï¿½
 								errores += error(tokens.get(linea).get(checar),0,"");
 								break;
 							
@@ -93,6 +93,7 @@ public class Sintactico implements Tipo {
 							break;
 						}
 						checar++;
+						System.out.println(errores + " " + linea );
 					}
 				}
 				checar = 0;
@@ -171,6 +172,7 @@ public class Sintactico implements Tipo {
 						esp = IDENT;
 						esperado = "IDENTIFICADOR";
 					break;
+					// Este es un cambio innecesario
 					case IDENT:
 						esp = LLAVE_A;
 						esperado = "{";
