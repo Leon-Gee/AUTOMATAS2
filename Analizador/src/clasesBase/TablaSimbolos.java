@@ -1,6 +1,8 @@
 package clasesBase;
 
 public class TablaSimbolos {
+	
+
 	private int fila;
 	private String nombre;
 	private String tipoDato;
@@ -20,15 +22,23 @@ public class TablaSimbolos {
 		fila = filaTabla;
 		this.alcance = alcance;
 	}
-	public int alcance() {
+	public int getAlcance() {
 		return alcance;
 	}
 	public int getFila() {
 		return fila;
 	}
+	public void setFila(int fila) {
+		this.fila = fila;
+	}
+
+	public void setAlcance(int alcance) {
+		this.alcance = alcance;
+	}
 	public String getNombre() {
 		return nombre;
 	}
+
 	
 	public void setNombre(String nom) {
 		nombre = nom;

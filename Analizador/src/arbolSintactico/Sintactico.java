@@ -240,6 +240,8 @@ public class Sintactico implements Tipo {
 					break;
 				case COMA:
 					esp.add(IDENT);
+					esp.add(INT);
+					esp.add(BOOLEAN);
 					break;
 				case PARENTESIS_A:
 					esp.add(PARENTESIS_A);

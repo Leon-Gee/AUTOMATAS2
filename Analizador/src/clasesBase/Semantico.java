@@ -24,8 +24,8 @@ public class Semantico implements Tipo {
 	private boolean isDeclaracion = false, isused=false;
 	public Semantico(ArrayList<ArrayList<Token>> tokens) {
 		this.tokens = tokens;
-		columnas = new String[4];
-		filas = new String[tokens.size()][4];
+		columnas = new String[5];
+		filas = new String[tokens.size()][5];
 		tablaSimbolos = new HashMap<String, TablaSimbolos>();
 		alcance = new ArrayList<Integer>();
 	}
@@ -38,36 +38,114 @@ public class Semantico implements Tipo {
 	}
 	String errorcin = "";
 	int fila = 0, column = 0;
+	int esperado = 0;
+	int noLlave = Integer.MAX_VALUE;
+	
 	// Generar la tabla de simbolos
 	public String generarTablaSimbolos() {
 		
-		String columnas[] = {"Nombre","Tipo de Dato","Posicion","Valor"};
+		String columnas[] = {"Nombre","Tipo de Dato","Posicion","Valor","Alcance"};
 		this.columnas = columnas;
 		
 		for(int i = 0;i<tokens.size();i++) {
+			System.out.println("nollave:" + noLlave);
 			switch(tokens.get(i).get(0).getTipo()) {
 				case PUBLIC:
 					alcance.add(i); // por si hay muchos metodos xd
+					declaracionMetodo(tokens.get(i));
 				break;
 				case WHILE: // También pueden existir muchas sentencias while, y por eso su valor
 					alcance.add(i);
+					ifWhileVar(tokens.get(i),i);
 				break;
+				case IF:
+					alcance.add(i);
+					ifWhileVar(tokens.get(i),i);
+					break;
 				case CLASS: // Dioquis pero para decir que se asigna
 					alcance.add(CLASS);
 				break; 
 				// NO ES QUE VAYAN A TENER LA MISMA FUNCIONALIDAD, AUN NO LES ASIGNO UNA
+				case RETURN:// solo para validar que lo que se manda existe...
+					break;
 				case LLAVE_A:
+					++esperado;
+					if(i==(noLlave+1))
+						noLlave = Integer.MAX_VALUE;
+					break;
 				case LLAVE_C:
-				break;
+					if(esperado>0)
+						sacarAlcance();
+					break;
 				// Falta uno por si es LLAVE_A
 				default: // declaracion o uso de variable	
 					declaracionVariable(tokens.get(i));
+					if(i==(noLlave+1) ) {
+						sacarAlcance();
+						noLlave = Integer.MAX_VALUE;
+
+					}
 				break;
 			}
 
 		}
 		if(!errorcin.isEmpty()) errorL+="ERRORES SEMANTICOS ENCONTRADOS: \n"+ errorcin;
 		return errorL;
+	}
+	private void ifWhileVar(ArrayList<Token> iwexpresion,int x) {
+		boolean siLlave = false;
+		String expresion = "";
+		for(int i = 1;i<iwexpresion.size();i++) {
+			if(iwexpresion.get(i).getTipo() == LLAVE_A) { ++esperado; siLlave = true;}
+			if(iwexpresion.get(i).getTipo()!=PARENTESIS_A &&iwexpresion.get(i).getTipo()!=PARENTESIS_C && iwexpresion.get(i).getTipo()!=LLAVE_A )
+				expresion+= iwexpresion.get(i).getValor()+" ";
+		}
+		if(!siLlave) noLlave = x;
+	}
+	private void declaracionMetodo(ArrayList<Token> meDeclar) {
+		ArrayList<String> varMetodos = new ArrayList<String>();
+		varMetodos.add(" ");
+		
+		for(int i = 4;i<meDeclar.size();i++) {
+			if(meDeclar.get(i).getTipo() == LLAVE_A)++esperado;
+			
+			if(meDeclar.get(i).getTipo() == COMA) {
+				varMetodos.add(" ");
+			}
+			if(meDeclar.get(i).getTipo() != COMA && meDeclar.get(i).getTipo() != LLAVE_A && meDeclar.get(i).getTipo() != PARENTESIS_C)
+			varMetodos.set(varMetodos.size()-1, varMetodos.get(varMetodos.size()-1) + " " + meDeclar.get(i).getValor());
+			
+		}
+		int x = 0;
+		while(varMetodos.size()>x) {
+			StringTokenizer tok = new StringTokenizer(varMetodos.get(x)," ");
+			while(tok.hasMoreElements()) {
+				String tipo = tok.nextToken();
+				String variable = tok.nextToken();
+				// se agregan las variables a la tabla de simbolos
+				agregarValor(variable,tipo,meDeclar.get(0).getRenglon(),"");
+			}
+			x++;
+		}
+		
+	}
+	private int obtenerAlcance() {
+		return alcance.get(alcance.size()-1);
+	}
+	private void sacarAlcance() {
+		esperado--;
+		if(alcance.size()!=0)
+			alcance.remove(alcance.size()-1);
+	}
+	private void agregarValor(String variable, String tipo, int renglon, String valor) {
+		filas[fila][0] = variable;
+		filas[fila][1] = tipo;
+		filas[fila][2] = renglon +"";
+		filas[fila][3] = valor;
+		filas[fila][4] = obtenerAlcance()+"";
+		
+		tablaSimbolos.put(variable, new TablaSimbolos(variable, tipo, renglon, valor,fila, obtenerAlcance()));
+		fila++;
 	}
 	// Si es declaración de variable
 	private void declaracionVariable(ArrayList<Token> varDeclar) {
@@ -112,27 +190,25 @@ public class Semantico implements Tipo {
 			if(existe) errorcin += errorcin+= "LA VARIABLE: ***"+ variable+ "*** QUE SE INTENTA DECLARAR EN LA POSICION: ***"+renglon+"*** YA EXISTE EN LA POSICION: ***" + tablaSimbolos.get(variable).getPosicion() +"***.\n"; 
 			else {
 				if(datoCorrecto) {
-					filas[fila][0] = variable;
-					filas[fila][1] = tipo;
-					filas[fila][2] = renglon +"";
-					filas[fila][3] = valor;
-						
-					tablaSimbolos.put(variable, new TablaSimbolos(variable, tipo, renglon, valor,fila, CLASS));
-					fila++;
+					agregarValor(variable,tipo,renglon,valor);
 				}
 			}
 		}else { // USO DE UNA VARIABLE
 			if(tablaSimbolos.containsKey(variable)) {
-				if(tablaSimbolos.get(variable).getTipoDato().equals( "int" )) {
-					datoCorrecto=isEntero(variable,valor,renglon);
-				}
-				if(tablaSimbolos.get(variable).getTipoDato().equals("boolean")) {
-					datoCorrecto=usoBoolean(variable,valor,renglon,tipo);
-				}
-			
-				if(datoCorrecto) { // ModificaciÃ³n en la tabla de simbolos :D
-					filas[tablaSimbolos.get(variable).getFila()][3] = valor;
-					tablaSimbolos.get(variable).setValor(valor);
+				if(tablaSimbolos.get(variable).getAlcance() == obtenerAlcance()) {
+					if(tablaSimbolos.get(variable).getTipoDato().equals( "int" )) {
+						datoCorrecto=isEntero(variable,valor,renglon);
+					}
+					if(tablaSimbolos.get(variable).getTipoDato().equals("boolean")) {
+						datoCorrecto=usoBoolean(variable,valor,renglon,tipo);
+					}
+				
+					if(datoCorrecto) { // ModificaciÃ³n en la tabla de simbolos :D
+						filas[tablaSimbolos.get(variable).getFila()][3] = valor;
+						tablaSimbolos.get(variable).setValor(valor);
+					}
+				}else {
+					errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICION: "+renglon+" SE ENCUENTRA FUERA DEL ALCANCE.\n";
 				}
 			}else {
 				errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICION: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
