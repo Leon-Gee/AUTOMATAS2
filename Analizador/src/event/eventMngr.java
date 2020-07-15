@@ -17,16 +17,18 @@ public class eventMngr implements ActionListener{
 	public int lineas;
 	public JTextArea texto;
 	public JTextArea resultado;
-	public	JTabbedPane consolaTabla;
+	public JTabbedPane consolaTabla;
+	public Lineas linea;
 	
 	public eventMngr(Panel pan) {
 		panel = pan;
-		lineas = 1;
 		texto = panel.getTxtEscribir();
 		resultado = panel.getTxtResultado();
 		escoger = new JFileChooser();
 		renglones = panel.getTxtRenglones();
 		consolaTabla = panel.getTpnConsolaTabla();
+		linea = new Lineas();
+		lineas = 1;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -102,6 +104,7 @@ public class eventMngr implements ActionListener{
 						}catch(Exception z) {
 							
 						}
+						panel.setLineas(lineas);
 						texto.append(linita+"\n");
 						linea = archivin.readLine();
 					}
@@ -112,7 +115,26 @@ public class eventMngr implements ActionListener{
 			}
 		}
 		
+	}
+	
+	public class Lineas implements KeyListener{
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+	        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+	        	renglones.append(++lineas + "\n");
+	        }
+	    }
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+		}
 		
 	}
-
 }

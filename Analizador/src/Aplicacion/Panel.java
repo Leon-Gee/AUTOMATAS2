@@ -12,6 +12,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -52,8 +54,7 @@ public class Panel extends JPanel {
 		txtRenglones.setText("1\n");
 	
 		
-		
-		scbRenglones = new JScrollPane(scbRenglones);
+		scbRenglones = new JScrollPane(txtRenglones);
 		scbRenglones.setBounds(6, 10, 24, 400);
 		scbRenglones.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		// -----------------------------------------
@@ -76,11 +77,13 @@ public class Panel extends JPanel {
             }
         });
 		
+		
 		// -----------------------------------------
 		
 		txtResultado = new JTextArea("Building in process...");
 		
 		eventos = new eventMngr(this);
+    	
 		txtEscribir.addKeyListener(new KeyAdapter() {
 		    @Override
 		    public void keyPressed(KeyEvent e) {
@@ -89,7 +92,6 @@ public class Panel extends JPanel {
 		        }
 		    }     
 		});
-	
 		
 	      
 		// ------------------------------------------
@@ -99,6 +101,7 @@ public class Panel extends JPanel {
 		btnAbrirArchivo = new JButton(" Abrir Archivo");
 		btnAbrirArchivo.setBounds(640,10,130,20);
 		btnAbrirArchivo.addActionListener(new eventMngr(this));
+		
 		
 		// ------------------------------------------
 		
@@ -183,9 +186,8 @@ public class Panel extends JPanel {
 	public JScrollPane getScbRenglones() {
 		return scbRenglones;
 	}
-	
-	
-	
-
+	public void setLineas(int linita) {
+		lineas = linita;
+	}
 	
 }
