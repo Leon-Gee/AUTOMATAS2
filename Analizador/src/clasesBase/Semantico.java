@@ -48,47 +48,43 @@ public class Semantico implements Tipo {
 		this.columnas = columnas;
 		
 		for(int i = 0;i<tokens.size();i++) {
-			try {
-				switch(tokens.get(i).get(0).getTipo()) {
-					case PUBLIC:
-						alcance.add(i); // por si hay muchos metodos xd
-						declaracionMetodo(tokens.get(i));
+			switch(tokens.get(i).get(0).getTipo()) {
+				case PUBLIC:
+					alcance.add(i); // por si hay muchos metodos xd
+					declaracionMetodo(tokens.get(i));
+				break;
+				case WHILE: // TambiÃ©n pueden existir muchas sentencias while, y por eso su valor
+					alcance.add(i);
+					ifWhileVar(tokens.get(i),i);
+				break;
+				case IF:
+					alcance.add(i);
+					ifWhileVar(tokens.get(i),i);
 					break;
-					case WHILE: // TambiÃ©n pueden existir muchas sentencias while, y por eso su valor
-						alcance.add(i);
-						ifWhileVar(tokens.get(i),i);
+				case CLASS: // Dioquis pero para decir que se asigna
+					alcance.add(CLASS);
+				break; 
+				// NO ES QUE VAYAN A TENER LA MISMA FUNCIONALIDAD, AUN NO LES ASIGNO UNA
+				case RETURN:// solo para validar que lo que se manda existe...
 					break;
-					case IF:
-						alcance.add(i);
-						ifWhileVar(tokens.get(i),i);
-						break;
-					case CLASS: // Dioquis pero para decir que se asigna
-						alcance.add(CLASS);
-					break; 
-					// NO ES QUE VAYAN A TENER LA MISMA FUNCIONALIDAD, AUN NO LES ASIGNO UNA
-					case RETURN:// solo para validar que lo que se manda existe...
-						break;
-					case LLAVE_A:
-						++esperado;
-						if(i==(noLlave+1))
-							noLlave = Integer.MAX_VALUE;
-						break;
-					case LLAVE_C:
-						if(esperado>0)
-							sacarAlcance();
-						break;
-					// Falta uno por si es LLAVE_A
-					default: // declaracion o uso de variable	
-						declaracionVariable(tokens.get(i));
-						if(i==(noLlave+1) ) {
-							sacarAlcance();
-							noLlave = Integer.MAX_VALUE;
-	
-						}
+				case LLAVE_A:
+					++esperado;
+					if(i==(noLlave+1))
+						noLlave = Integer.MAX_VALUE;
 					break;
-				}
-			}catch(IndexOutOfBoundsException e) {
-				
+				case LLAVE_C:
+					if(esperado>0)
+						sacarAlcance();
+					break;
+				// Falta uno por si es LLAVE_A
+				default: // declaracion o uso de variable	
+					declaracionVariable(tokens.get(i));
+					if(i==(noLlave+1) ) {
+						sacarAlcance();
+						noLlave = Integer.MAX_VALUE;
+
+					}
+				break;
 			}
 
 		}
@@ -470,4 +466,5 @@ public class Semantico implements Tipo {
 		
 	
 }
+
 
