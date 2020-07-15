@@ -718,7 +718,7 @@ public class Sintactico implements Tipo {
 					esp.add(PUNTO_COMA);
 					
 				}
-				if(tipo == NUM && isMenor) {
+				if(tipo == NUM) {
 					esp.add(PUNTO_COMA);
 					isMenor = false;
 				}
