@@ -12,13 +12,11 @@ import clasesBase.*;
 
 public class eventMngr implements ActionListener{
 	private Panel panel;
-	public JFileChooser escoger;
-	public JTextArea renglones;
-	public int lineas;
-	public JTextArea texto;
-	public JTextArea resultado;
-	public JTabbedPane consolaTabla;
-
+	private JFileChooser escoger;
+	private JTextArea renglones;
+	private JTextArea texto;
+	private JTextArea resultado;
+	private JTabbedPane consolaTabla;
 	
 	public eventMngr(Panel pan) {
 		panel = pan;
@@ -27,7 +25,6 @@ public class eventMngr implements ActionListener{
 		escoger = new JFileChooser();
 		renglones = panel.getTxtRenglones();
 		consolaTabla = panel.getTpnConsolaTabla();
-		lineas = 1;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -38,8 +35,10 @@ public class eventMngr implements ActionListener{
 			escoger.setDialogTitle("");
 			int seleccion = escoger.showSaveDialog(texto);
 			if(seleccion == escoger.APPROVE_OPTION) {
+				
 				String guardado = escoger.getSelectedFile().getName();
 				String direccion = escoger.getCurrentDirectory().toString();
+				
 				try {
 					FileWriter archivoEs = new FileWriter(direccion + "/" + guardado + ".txt");
 					PrintWriter escribir = new PrintWriter(archivoEs);
@@ -49,7 +48,9 @@ public class eventMngr implements ActionListener{
 						String linea = tokenizar.nextToken();
 						escribir.println(linea);
 					}
+					
 					escribir.close();
+					
 				}catch(IOException z) {
 					z.printStackTrace();
 				}
@@ -62,6 +63,7 @@ public class eventMngr implements ActionListener{
 
 			palabritas.analizador();
 			resultado.setText(palabritas.getErrorL());
+			
 			if(consolaTabla.getTabCount()> 1)
 				consolaTabla.removeTabAt(1);
 			
@@ -78,10 +80,15 @@ public class eventMngr implements ActionListener{
 		}
 		//Evento boton para abrir archivo
 		if(e.getSource() == panel.getBtnAbrirArchivo()) {
+			
+			int lineas = 1;
+			
 			if(consolaTabla.getTabCount()> 1)
 				consolaTabla.removeTabAt(1);
+			
 			escoger.setDialogTitle("");
 			int seleccion = escoger.showOpenDialog(texto);
+			
 			if(seleccion == escoger.APPROVE_OPTION) {
 				String guardado = escoger.getSelectedFile().getName();
 				String direccion = escoger.getCurrentDirectory().toString();
@@ -94,18 +101,23 @@ public class eventMngr implements ActionListener{
 					lineas = 0;
 					renglones.setText("");
 					resultado.setText("Building in process...");
+					
 					while(linea != null) {
+						
 						tokenizar = new StringTokenizer(linea,"\n");
 						String linita = "";
 						renglones.append((++lineas) +"\n");
+						
 						try {
 							linita = tokenizar.nextToken();
 						}catch(Exception z) {
 							
 						}
+						
 						panel.setLineas(lineas);
 						texto.append(linita+"\n");
 						linea = archivin.readLine();
+						
 					}
 					archivin.close();
 				}catch(IOException z) {
@@ -115,6 +127,6 @@ public class eventMngr implements ActionListener{
 		}
 		
 	}
-
 	
+
 }

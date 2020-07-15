@@ -23,10 +23,7 @@ import javax.swing.*;
 import event.eventMngr;
 
 public class Panel extends JPanel {
-	/**
-	 * 
-	 */
-	
+
 	private JTextArea txtEscribir;
 	private JTextArea txtResultado;
 	private JTextArea txtRenglones;
@@ -90,6 +87,11 @@ public class Panel extends JPanel {
 		        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 		        	txtRenglones.append(++lineas + "\n");
 		        }
+		        //Intento por implementar que se reduzcan las lineas cuando borras toda una linea de codigo
+		     //   if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE ) {
+		        //	txtRenglones.setText(""+txtRenglones.getText().substring(0, txtRenglones.getText ().length()-1));
+		        	
+		     //   }
 		    }     
 		});
 		
