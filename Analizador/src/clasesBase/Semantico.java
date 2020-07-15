@@ -152,7 +152,9 @@ public class Semantico implements Tipo {
 					}
 					if(valor.matches("[a-zA-Z]+([a-zA-Z]*)")) {
 						if(tablaSimbolos.containsKey(valor)) { // QUE EL IDENTIFICADOR SE ENCUENTRE PREVIAMENTE DECLARADO
-			    			if(!tablaSimbolos.get(valor).getTipoDato().equals("int")) { // EL IDENTIFICADOR COINCIDE CON EL TIPO
+			    			if(!comprobarAlcance(obtenerAlcance(),valor))
+			    				errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valor + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valor).getTipoDato()+" *** EN UNA COMPARACION DE INT EN LA LINEA "+ renglon + " Y SE ENCUENTRA FUERA DEL ALCANCE.\n"; 	
+							if(!tablaSimbolos.get(valor).getTipoDato().equals("int")) { // EL IDENTIFICADOR COINCIDE CON EL TIPO
 			    				errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valor + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valor).getTipoDato()+" *** EN UNA COMPARACION DE INT EN LA LINEA "+ renglon + ".\n"; 	
 			    			}else {
 			    				++orden;
@@ -173,9 +175,13 @@ public class Semantico implements Tipo {
 							errorcin+="ERROR SEMANTICO: INCOMPATIBILIDAD DE TIPOS, NO SE PUEDE COMPARAR UN TIPO NUMERICO CON UN BOOLEAN, EN LA LINEA "+ renglon + ". \n" ; 
 						if(valor.matches("[a-zA-Z]+([a-zA-Z]*)")) {
 							if(tablaSimbolos.containsKey(valor)) { // QUE EL IDENTIFICADOR SE ENCUENTRE PREVIAMENTE DECLARADO
-				    			if(!tablaSimbolos.get(valor).getTipoDato().equals("boolean")) { // EL IDENTIFICADOR COINCIDE CON EL TIPO
-				    				errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valor + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valor).getTipoDato()+" *** EN UNA OPERACION DE BOOLEAN EN LA LINEA "+ renglon + ".\n"; 	
-				    			}
+								if(comprobarAlcance(obtenerAlcance(),valor)) {
+									if(!tablaSimbolos.get(valor).getTipoDato().equals("boolean")) { // EL IDENTIFICADOR COINCIDE CON EL TIPO
+					    				errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valor + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valor).getTipoDato()+" *** EN UNA OPERACION DE BOOLEAN EN LA LINEA "+ renglon + ".\n"; 	
+					    			}
+								}else {
+									errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valor + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valor).getTipoDato()+" *** EN UNA OPERACION DE BOOLEAN EN LA LINEA "+ renglon + " Y SE ENCUENTRA FUERA DEL ALCANCE.\n"; 	
+								}
 				    		}
 						}
 					}
@@ -223,6 +229,29 @@ public class Semantico implements Tipo {
 		esperado--;
 		if(alcance.size()!=0)
 			alcance.remove(alcance.size()-1);
+	}
+	private boolean comprobarAlcance(int alc,String variableExistente) {
+		boolean siAlcanza = alc==tablaSimbolos.get(variableExistente).getAlcance() || tablaSimbolos.get(variableExistente).getAlcance() == CLASS;
+		
+		ArrayList<Integer> alcances = new ArrayList<Integer>();
+		if(alcance.size()>1 && !siAlcanza) {
+			for(int i = alcance.size()-1;i>=0;i--) {
+				alcances.add(alcance.get(i));
+				if(alcance.get(i).equals("CLASS")) {
+					break;
+				}
+			}
+			for(int i = 0;i<alcances.size();i++) {
+				if(tablaSimbolos.get(variableExistente).getAlcance() == alcances.get(i)) {
+					System.out.println("alcances: " + alcances.get(i));
+					siAlcanza = true;
+					break;
+				}
+			}
+		}
+		
+
+		return siAlcanza;
 	}
 	private void agregarValor(String variable, String tipo, int renglon, String valor) {
 		filas[fila][0] = variable;
@@ -339,6 +368,11 @@ public class Semantico implements Tipo {
 		    	// SI SE TRATA DE UN IDENTIFICADOR
 		    	if(tok.matches("[a-zA-Z]+([a-zA-Z0-9])*")) {
 		    		if(tablaSimbolos.containsKey(tok)) { // QUE EL IDENTIFICADOR SE ENCUENTRE PREVIAMENTE DECLARADO
+		    			if(!comprobarAlcance(obtenerAlcance(),tok)) {
+		    				errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ tok + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(tok).getTipoDato()+" *** EN UNA OPERACION DE INT EN LA LINEA "+ renglon + " Y SE ENCUENTRA FUERA DEL ALCANCE.\n"; 	
+		    				valido = false;
+		    			}
+		    				
 		    			if(!tablaSimbolos.get(tok).getTipoDato().equals("int")) { // EL IDENTIFICADOR COINCIDE CON EL TIPO
 		    				errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ tok + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(tok).getTipoDato()+" *** EN UNA OPERACION DE INT EN LA LINEA "+ renglon + ".\n"; 	
 		    				valido = false;
@@ -383,6 +417,10 @@ public class Semantico implements Tipo {
 						//Verificar que exista
 						if(tablaSimbolos.containsKey(valorIdentificador.get(r))) {
 							identificador++;
+							if(!comprobarAlcance(obtenerAlcance(),valorIdentificador.get(r))) {
+								errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valorIdentificador.get(r) + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato()+" *** EN UNA OPERACION DE BOOLEAN EN LA LINEA "+ renglon + " Y SE ENCUENTRA FUERA DEL ALCANCE.\n"; 	
+								cambiarValor = false;
+							}
 							//Si existe verificamos el tipo de dato
 							if(!tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals(tipo)){
 								//Verificar si se trata de int

@@ -224,52 +224,13 @@ public class Palabritas implements Tipo {
 	}
 	private String espacios(String cadena) {
 		
-		for(int i = 0;;i++) {
-			for(int a = 0; a<signos.length;a++) {
-				boolean simon = false;
-				if(cadena.charAt(i) == '&') {
-					if(cadena.charAt(i-1) != ' ') {
-						if(cadena.charAt(i) == cadena.charAt(i+1)){
-							simon = true;
-						}
-					}else {
-						if(cadena.charAt(i) == signos[a].charAt(0) &&cadena.length()-2 >= (i+1)) {
-							simon = true;
-						}
-					}
-					if(simon) {
-						String caracter = Character.toString(cadena.charAt(i));
-						cadena = cadena.replace(Character.toString(cadena.charAt(i)),"@");
-						cadena = cadena.replace("@@", " " + caracter + caracter + " ");
-						cadena = cadena.replace("@", "&");
-						++i;
-						break;
-					}
-				}else {
-					if(i!=0) {
-					if(cadena.charAt(i) == signos[a].charAt(0) && cadena.charAt(i-1) != ' ') {
-						simon = true;
-					}else {
-						if((i+1) <= cadena.length()-2 )
-							if(cadena.charAt(i) == signos[a].charAt(0) && cadena.charAt(i+1) != ' ') {
-								simon = true;
-							}
-					}
-					}else {
-						if(cadena.charAt(i) == signos[a].charAt(0)) {
-							simon = true;
-						}
-					}
-				}
-				if(simon) {
-					cadena =  cadena.replace(signos[a], " " + signos[a] + " ");
-					break;
-				}
-			}
-			if(i==cadena.length()-1) break;
-		}
-				
+		for(int i = 0;i<signos.length;i++) {
+			System.out.println(cadena);
+				cadena = cadena.replace(signos[i], "@");
+				cadena = cadena.replace("@"," " + signos[i] + " ");
 		
+			
+		}
 		// algo=algo;
 		// =algo
 		// asi;
