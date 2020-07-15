@@ -299,6 +299,7 @@ public class Sintactico implements Tipo {
 				switch(tokens.get(i).getTipo()) {
 					case PARENTESIS_A:
 						esp.add(IDENT);
+						esp.add(NUM);
 						esp.add(TRUE);
 						esp.add(FALSE);
 						esp.add(NEGACION);
