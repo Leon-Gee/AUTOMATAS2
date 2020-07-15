@@ -53,7 +53,7 @@ public class Semantico implements Tipo {
 					alcance.add(i); // por si hay muchos metodos xd
 					declaracionMetodo(tokens.get(i));
 				break;
-				case WHILE: // También pueden existir muchas sentencias while, y por eso su valor
+				case WHILE: // TambiÃ©n pueden existir muchas sentencias while, y por eso su valor
 					alcance.add(i);
 					ifWhileVar(tokens.get(i),i);
 				break;
@@ -157,7 +157,7 @@ public class Semantico implements Tipo {
 			    			if(valor.equals("true")||valor.equals("false")) 
 			    				errorcin+="INTENTA COMPARAR UN VALOR ***boolean*** EN UNA EXPRESION DEL TIPO  ***int***"+ " EN LA LINEA: "+renglon+ ".\n";
 			    			else
-			    				errorcin+= "ERROR SEMÁNTICO, LA VARIABLE: "+ valor+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+			    				errorcin+= "ERROR SEMÃ�NTICO, LA VARIABLE: "+ valor+ " QUE SE INTENTA USAR EN LA POSICIÃ“N: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
 			    		}
 					}
 				}else{
@@ -230,7 +230,7 @@ public class Semantico implements Tipo {
 		tablaSimbolos.put(variable, new TablaSimbolos(variable, tipo, renglon, valor,fila, obtenerAlcance()));
 		fila++;
 	}
-	// Si es declaración de variable
+	// Si es declaraciÃ³n de variable
 	private void declaracionVariable(ArrayList<Token> varDeclar) {
 		String valor = "",variable = "";
 		int i = 0, renglon = 0, igual = 0;
@@ -244,6 +244,7 @@ public class Semantico implements Tipo {
 			if(varDeclar.get(1).getTipo() == IGUAL) { // si es directamente una variable
 				variable = varDeclar.get(0).getValor();
 				i = 2;
+				
 			}
 			break;
 			default:
@@ -255,10 +256,14 @@ public class Semantico implements Tipo {
 		}
 		 
 		System.out.println("variable: " +  variable);
+		
 		// OBTENER EL VALOR DE LA VARIABLE
 		while(i<varDeclar.size()) {
 			if(varDeclar.get(i).getTipo() != PUNTO_COMA) {
 				valor += varDeclar.get(i).getValor() + " ";
+				System.out.println("valorvar"+varDeclar.get(i));
+				if (varDeclar.get(i).getTipo()==IDENT)
+					valorIdentificador.add(varDeclar.get(i).getValor());
 			}
 			i++;
 		}
@@ -270,7 +275,7 @@ public class Semantico implements Tipo {
 				datoCorrecto = verificarBoolean(variable,valor,renglon,tipo);
 			}
 			boolean existe = tablaSimbolos.containsKey(variable);
-			if(existe) errorcin += errorcin+= "LA VARIABLE: ***"+ variable+ "*** QUE SE INTENTA DECLARAR EN LA POSICION: ***"+renglon+"*** YA EXISTE EN LA POSICION: ***" + tablaSimbolos.get(variable).getPosicion() +"***.\n"; 
+			if(existe)  errorcin+= "LA VARIABLE: ***"+ variable+ "*** QUE SE INTENTA DECLARAR EN LA POSICION: ***"+renglon+"*** YA EXISTE EN LA POSICION: ***" + tablaSimbolos.get(variable).getPosicion() +"***.\n"; 
 			else {
 				if(datoCorrecto) {
 					agregarValor(variable,tipo,renglon,valor);
@@ -286,7 +291,7 @@ public class Semantico implements Tipo {
 						datoCorrecto=usoBoolean(variable,valor,renglon,tipo);
 					}
 				
-					if(datoCorrecto) { // ModificaciÃ³n en la tabla de simbolos :D
+					if(datoCorrecto) { // ModificaciÃƒÂ³n en la tabla de simbolos :D
 						filas[tablaSimbolos.get(variable).getFila()][3] = valor;
 						tablaSimbolos.get(variable).setValor(valor);
 					}
@@ -303,11 +308,11 @@ public class Semantico implements Tipo {
 	
 	public boolean usoBoolean (String variable, String valor,int renglon,String tipo) {
 		boolean cambiarValor=true;
-		//Ver si estÃƒÂ¡ declarada
+		//Ver si estÃƒÆ’Ã‚Â¡ declarada
 		if(!tablaSimbolos.containsKey(variable))
 			errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICION: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
 		else {
-			//Darle un valor nuevo al que tenÃƒÂ­a
+			//Darle un valor nuevo al que tenÃƒÆ’Ã‚Â­a
 			TablaSimbolos verificar= tablaSimbolos.get(variable);
 			
 			if(!verificar.getValor().equals(valor)) {
@@ -319,7 +324,7 @@ public class Semantico implements Tipo {
 		return cambiarValor;
 	}
 	
-	//VERIFICACIÓN DE LAS DECLARACIONES DE VARIABLES
+	//VERIFICACIÃ“N DE LAS DECLARACIONES DE VARIABLES
 		 //Tipo INT
 		private boolean isEntero(String variable, String valor,int renglon) {
 			boolean valido=true;
@@ -338,7 +343,7 @@ public class Semantico implements Tipo {
 		    			if(tok.equals("true")||tok.equals("false")) 
 		    				errorcin+="INTENTA ASIGNAR UN VALOR ***boolean*** EN LA VARIABLE *** "+variable+"*** QUE ES ***int***"+ " EN LA LINEA: "+renglon+ ".\n";
 		    			else
-		    				errorcin+= "ERROR SEMÁNTICO, LA VARIABLE: "+ tok+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+		    				errorcin+= "ERROR SEMÃ�NTICO, LA VARIABLE: "+ tok+ " QUE SE INTENTA USAR EN LA POSICIÃ“N: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
 		    			valido = false;
 		    		}
 		    		
@@ -363,13 +368,14 @@ public class Semantico implements Tipo {
 		}
 
 		private boolean verificarBoolean (String variable, String valor,int renglon,String tipo) {
+			int unNumero=0;
 			boolean cambiarValor=true;
+			int opInc=0;
 			int numerito=0; int identificador=0;
 			if ((!(valor.equals("true "))) && (!(valor.equals("false ")))) {
 				//Verificar que sea un identificador
 				if(!valorIdentificador.isEmpty()) {
 					for(int r=0; r<valorIdentificador.size();r++) {
-						
 						//Verificar que exista
 						if(tablaSimbolos.containsKey(valorIdentificador.get(r))) {
 							identificador++;
@@ -378,6 +384,11 @@ public class Semantico implements Tipo {
 								//Verificar si se trata de int
 								if(tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals("int")) {
 									identificador++;
+									if (valorIdentificador.size()==1) {
+										errorcin+="Intenta asignar un tipo de dato*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***linea: "+ renglon+ ".\n";
+										cambiarValor=false;
+									}
+									else {
 									//Verifico que haya un numeros o signos
 									char numeros []= {'0','1','2','3','4','5','6','7','8','9','&','<','>','!'};
 									for (int a=0; a<valor.length();a++) {
@@ -391,11 +402,12 @@ public class Semantico implements Tipo {
 												break;
 											}
 											if(valor.charAt(a)=='+'||valor.charAt(a)=='-'||valor.charAt(a)=='*'||valor.charAt(a)=='/') {
-												errorcin+="Intenta asignar un tipo de operando*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***linea: "+ renglon+ ".\n";
+												opInc++;
 												cambiarValor=false;
 												break;
 											}
 										}
+									}
 								}
 								
 							}
@@ -415,9 +427,9 @@ public class Semantico implements Tipo {
 							errorcin+="La variable: "+valorIdentificador.get(r)+ " que intenta usar en la linea "+ renglon+ " no existe"+".\n";
 							break;
 						}
-					valorIdentificador.clear();
-				}
 					
+				}
+					valorIdentificador.clear();
 				
 			}
 				//Si no son identificadores y son solo numeros
@@ -427,13 +439,14 @@ public class Semantico implements Tipo {
 					for (int b=0; b<numeros.length;b++) {
 						if (valor.charAt(a)==numeros[b]) {
 							numerito=300;
+							unNumero++;
 							break;
 						}
 						if (b==numeros.length-1&&numerito!=300&&identificador==0) {
 							cambiarValor=false;
 						}
 						if(valor.charAt(a)=='+'||valor.charAt(a)=='-'||valor.charAt(a)=='*'||valor.charAt(a)=='/') {
-							errorcin+="Intenta asignar un tipo de operando*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***linea: "+ renglon+ ".\n";
+							opInc++;
 							cambiarValor=false;
 							
 						}
@@ -441,7 +454,13 @@ public class Semantico implements Tipo {
 			}
 			
 		}
-			
+			if(numerito==300&&unNumero==1) {
+				errorcin+="Intenta asignar un dato el dato: *** "+ valor+ " ***que es *** int "+ " ***en un dato*** "+ tipo+ " ***linea: "+ renglon+ ".\n";
+				cambiarValor=false;
+			}
+				
+			if(opInc!=0)
+			errorcin+="Intenta asignar un tipo de operando*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***linea: "+ renglon+ ".\n";
 			return cambiarValor;
 		}
 		
