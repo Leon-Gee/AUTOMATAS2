@@ -216,7 +216,10 @@ public class Semantico implements Tipo {
 				String tipo = tok.nextToken();
 				String variable = tok.nextToken();
 				// se agregan las variables a la tabla de simbolos
-				agregarValor(variable,tipo,meDeclar.get(0).getRenglon(),"");
+				if(!tablaSimbolos.containsKey(variable))
+					agregarValor(variable,tipo,meDeclar.get(0).getRenglon(),"");
+				else
+					errorcin+= "LA VARIABLE: ***"+ variable+ "*** QUE SE INTENTA DECLARAR EN LA POSICION: ***"+meDeclar.get(0).getRenglon()+"*** YA EXISTE EN LA POSICION: ***" + tablaSimbolos.get(variable).getPosicion() +"***.\n"; 
 			}
 			x++;
 		}
