@@ -48,7 +48,6 @@ public class Semantico implements Tipo {
 		this.columnas = columnas;
 		
 		for(int i = 0;i<tokens.size();i++) {
-			System.out.println("nollave:" + noLlave);
 			switch(tokens.get(i).get(0).getTipo()) {
 				case PUBLIC:
 					alcance.add(i); // por si hay muchos metodos xd
@@ -92,6 +91,129 @@ public class Semantico implements Tipo {
 		if(!errorcin.isEmpty()) errorL+="ERRORES SEMANTICOS ENCONTRADOS: \n"+ errorcin;
 		return errorL;
 	}
+	// Cambiare la logica pero comentare esto
+	/*
+	private void evaluarExpresiones(String expresion,int renglon) {
+		StringTokenizer tok = new StringTokenizer(expresion," ");
+		ArrayList<String> esperado = new ArrayList<String>();
+		ArrayList<String> operador = new ArrayList<String>();
+		ArrayList<String> noEsperado = new ArrayList<String>();
+		int menor = 0;
+		int i = 0;
+		String ant = "";
+		String tipo = "";
+		boolean comprobar = true;
+		while(tok.hasMoreTokens()) {
+			String valor = tok.nextToken();
+			if(i == 0) ant = valor;
+			// Reiniciaremos xD
+			// Primero... que es lo que debemos encontrar..?
+			
+			// Expresiones booleanas validas: (x<3) && t
+			// Expresiones booleanas invalidas: x (si es int) | b + 3 | t < 3 (si t es boolean)
+			
+			// ahora xDD valoremos que.. puede venir.. !( tambien.. o !t... así que empecemos 
+			
+			// Si viene variable o numero
+			if(i!=0) {
+				
+					for(int p = 0;p<noEsperado.size();p++) {
+						if(valor.matches( noEsperado.remove(p) )){
+							switch(valor) {
+							case "<":
+							case "+":
+							case "-":
+							case "*":
+								errorcin+="Intenta asignar un tipo de operando*** "+ " int "+ " ***en un dato*** "+ "boolean"+ " ***linea: "+ renglon+ ".\n";
+								break;
+							case "&&":
+							case "!":
+								errorcin+="Intenta asignar un tipo de operando*** "+ " boolean "+ " ***en un dato*** "+ "int"+ " ***linea: "+ renglon+ ".\n";
+								break;
+							}
+						}
+					}
+				
+				esperado.clear();
+				operador.clear();
+				ant = valor;
+				i++;
+			}
+			if(!valor.equals("true") || !valor.equals("false")) {
+					if(valor.matches("[a-zA-Z]+([a-zA-Z0-9])*")) {
+						if(tablaSimbolos.containsKey(valor)) {
+							if(i==0)
+								comprobar = i==0;
+							else
+								comprobar = ant.matches("[\\<\\+\\-\\*\\(]");
+							if(tablaSimbolos.get(valor).getTipoDato().equals("int")  && comprobar) {
+								operador.add("[\\<\\+\\-\\*\\)]");
+								noEsperado.add("[&&\\(\\!]");
+								if(menor == 0)++menor; // xD 
+							}else {
+								if(i==0)
+									comprobar = i==0;
+								else
+									comprobar =  ant.matches("[\\!\\(]");
+								if(tablaSimbolos.get(valor).getTipoDato().equals("boolean")&&comprobar){
+										operador.add("[&&\\)\\!]");
+										noEsperado.add("[\\(\\<\\+\\-\\*]");
+								}else {
+									if(i!=0)
+										errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valor + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valor).getTipoDato()+" *** EN UNA OPERACION DE ***"+ tipo + "*** EN LA LINEA "+ renglon + ".\n"; 					
+								}
+							}
+						}else {
+							errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ valor+ " QUE SE INTENTA USAR EN LA POSICION: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+						}
+					}else {
+						if(valor.matches("[0-9]+([0-9])*")) {
+							if(menor == 0)++menor; // xD
+							noEsperado.add("[\\(\\&&\\!]");
+							operador.add("[\\<\\+\\-\\*\\)]");
+						}else { // si vienen operadores... 
+							if(valor.matches("[\\+\\*\\-\\<]")) {
+								operador.add("(");
+								tipo = "int";
+								noEsperado.add("[\\&&\\!\\)\\<]");
+								esperado.add("[a-zA-Z]+([a-zA-Z0-9])*");
+								esperado.add("[0-9]+([0-9])*");
+								if(valor.equals("<")) { 
+									if(menor == 1) {
+										--menor;
+									}else {
+										// error...
+									}
+								}
+								
+								
+							}else {
+								if(valor.matches("[\\&&\\(]")) {
+									tipo = "boolean";
+									noEsperado.add("[\\+\\-\\*\\)\\<]");
+									esperado.add("[true\\false]");
+									esperado.add("[0-9]+([0-9])*");
+									esperado.add("[a-zA-Z]+([a-zA-Z0-9])*");//Identificador xdxd
+									 // dato curioso el doble \\ sirve como operador logico OR
+									
+								}else {
+									if(valor.matches("[\\!]")) {
+										tipo = "boolean";
+										noEsperado.add("[\\+\\-\\*\\)\\<\\&&]");
+										esperado.add("[true\\false]");
+										esperado.add("[a-zA-Z]+([a-zA-Z0-9])*");
+										operador.add("("); /// como?!??! xDDD, del que?
+									}
+								}
+							}
+						}
+					}
+				
+			}else{
+				esperado.add("&&");
+			}
+		}
+	}*/
 	private void ifWhileVar(ArrayList<Token> iwexpresion,int x) {
 		boolean siLlave = false;
 		String expresion = "";
@@ -100,7 +222,90 @@ public class Semantico implements Tipo {
 			if(iwexpresion.get(i).getTipo()!=PARENTESIS_A &&iwexpresion.get(i).getTipo()!=PARENTESIS_C && iwexpresion.get(i).getTipo()!=LLAVE_A )
 				expresion+= iwexpresion.get(i).getValor()+" ";
 		}
+		
+		if(!expresion.isEmpty())
+			evaluarExpresiones(expresion,iwexpresion.get(0).getRenglon());
 		if(!siLlave) noLlave = x;
+	}
+	private void evaluarExpresiones(String expresion,int renglon) { // ando dormida xDD entre los dos nos completamos
+		StringTokenizer tok = new StringTokenizer(expresion," ");
+		String tipo = "";
+		int i = 0,orden = 0;
+		while(tok.hasMoreTokens()) {
+		 // b<3 && z
+			System.out.println(i);
+			String valor = tok.nextToken();
+			
+			if(valor.equals("&&") || valor.equals("!")) { tipo = ""; orden=0;} // si llegamos al operador and posiblemente cambie de tipo..
+			//System.out.println(tipo + " " + valor);
+			if(!(valor.equals("&&") || valor.equals("!"))&& (tipo.isEmpty() || i == 0)) { // Para ver de que tipo es la expresion
+				if(valor.matches("[a-zA-Z]+([a-zA-Z]*)") && !valor.matches("[\\true\\false]")) {
+					if(tablaSimbolos.containsKey(valor)) {
+						tipo = tablaSimbolos.get(valor).getTipoDato();
+						System.out.println(tipo);
+					}else {
+						errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ valor+ " :c QUE SE INTENTA USAR EN LA POSICION: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+					}
+				}else {
+					if(valor.equals("true")||valor.equals("false")) {
+						tipo = "boolean";
+					}else {
+						if(valor.matches("[0-9]+([0-9])*") || valor.equals("-")) {
+							tipo = "int";
+						}
+					}
+				}
+			}
+			if(!tipo.isEmpty()) {
+				// Tipo int
+				if(tipo.equals("int")) {
+					if(valor.equals("<")) {
+						++orden;
+					System.out.println("<:"+orden);
+					}
+					if(valor.equals("!"))
+							errorcin+="ERROR SEMANTICO: INCOMPATIBILIDAD DE OPERANDOS *** " + valor + " *** NO SE PUEDEN USAR ESTOS OPERADORES LOGICOS PARA LA COMPARACION DEL TIPO INT EN LA LINEA "+renglon+".\n"; 
+					if(valor.matches("[0-9]+([0-9])*")) {++orden;
+					System.out.println("num:"+orden);
+					}
+					if(valor.matches("[a-zA-Z]+([a-zA-Z]*)")) {
+						if(tablaSimbolos.containsKey(valor)) { // QUE EL IDENTIFICADOR SE ENCUENTRE PREVIAMENTE DECLARADO
+			    			if(!tablaSimbolos.get(valor).getTipoDato().equals("int")) { // EL IDENTIFICADOR COINCIDE CON EL TIPO
+			    				errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valor + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valor).getTipoDato()+" *** EN UNA COMPARACION DE INT EN LA LINEA "+ renglon + ".\n"; 	
+			    			}else {
+			    				++orden;
+			    			}
+			    		}else {
+			    			if(valor.equals("true")||valor.equals("false")) 
+			    				errorcin+="INTENTA COMPARAR UN VALOR ***boolean*** EN UNA EXPRESION DEL TIPO  ***int***"+ " EN LA LINEA: "+renglon+ ".\n";
+			    			else
+			    				errorcin+= "ERROR SEMÁNTICO, LA VARIABLE: "+ valor+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+			    		}
+					}
+				}else{
+					// tipo boolean
+					if(tipo.equals("boolean")) {
+						if(valor.matches("[\\+\\-\\*\\<]"))
+							errorcin+="ERROR SEMANTICO: INCOMPATIBILIDAD DE OPERANDOS *** " + valor + " *** NO SE PUEDEN USAR OPERADORES ARITMETICOS PARA LA COMPARACION DEL TIPO BOOLEAN EN LA LINEA "+ renglon+ ". \n"; 
+						if(valor.matches("[0-9]+([0-9])*"))
+							errorcin+="ERROR SEMANTICO: INCOMPATIBILIDAD DE TIPOS, NO SE PUEDE COMPARAR UN TIPO NUMERICO CON UN BOOLEAN, EN LA LINEA "+ renglon + ". \n" ; 
+						if(valor.matches("[a-zA-Z]+([a-zA-Z]*)")) {
+							if(tablaSimbolos.containsKey(valor)) { // QUE EL IDENTIFICADOR SE ENCUENTRE PREVIAMENTE DECLARADO
+				    			if(!tablaSimbolos.get(valor).getTipoDato().equals("boolean")) { // EL IDENTIFICADOR COINCIDE CON EL TIPO
+				    				errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valor + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valor).getTipoDato()+" *** EN UNA OPERACION DE BOOLEAN EN LA LINEA "+ renglon + ".\n"; 	
+				    			}
+				    		}
+						}
+					}
+				}
+				
+			}
+			System.out.println(orden + " " + valor);
+			i++;
+		}
+		System.out.println("orden: " + orden);
+			if(tipo.equals("int")&&!(orden==3)) errorcin+= "SE INTENTO ASIGNAR UN VALOR INT A LA EXPRESION ***" + expresion + "*** EN LA LINEA " + renglon + ".\n";
+		
 	}
 	private void declaracionMetodo(ArrayList<Token> meDeclar) {
 		ArrayList<String> varMetodos = new ArrayList<String>();
@@ -252,7 +457,7 @@ public class Semantico implements Tipo {
 		    				valido = false;
 		    			}
 		    		}else {
-		    			if(tok.equals("true")||tok.equals(false)) 
+		    			if(tok.equals("true")||tok.equals("false")) 
 		    				errorcin+="INTENTA ASIGNAR UN VALOR ***boolean*** EN LA VARIABLE *** "+variable+"*** QUE ES ***int***"+ " EN LA LINEA: "+renglon+ ".\n";
 		    			else
 		    				errorcin+= "ERROR SEMÁNTICO, LA VARIABLE: "+ tok+ " QUE SE INTENTA USAR EN LA POSICIÓN: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";

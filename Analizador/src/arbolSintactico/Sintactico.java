@@ -349,6 +349,7 @@ public class Sintactico implements Tipo {
 					case MENOR:
 						esp.add(IDENT);
 						esp.add(NUM);
+						esp.add(PARENTESIS_A);
 						esp.add(NEGACION);
 						vacio = false;
 						break;
@@ -360,7 +361,6 @@ public class Sintactico implements Tipo {
 						esp.add(PARENTESIS_A);
 						break;
 					case NUM:
-						esp.add(PARENTESIS_A);
 						esp.add(MENOR);
 						esp.add(AND);
 						esp.add(PARENTESIS_C);
