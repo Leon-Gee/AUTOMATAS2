@@ -6,17 +6,22 @@ public class TablaSimbolos {
 	private String tipoDato;
 	private int posicion;
 	private String valor;
+	private int alcance;
 	
 	public TablaSimbolos() {
 		
 	}
 	
-	public TablaSimbolos(String nom, String tipo, int pos, String val, int filaTabla) {
+	public TablaSimbolos(String nom, String tipo, int pos, String val, int filaTabla, int alcance) {
 		nombre = nom;
 		tipoDato = tipo;
 		posicion = pos;
 		valor = val;
 		fila = filaTabla;
+		this.alcance = alcance;
+	}
+	public int alcance() {
+		return alcance;
 	}
 	public int getFila() {
 		return fila;
