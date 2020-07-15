@@ -97,7 +97,7 @@ public class Palabritas implements Tipo {
 			verificar = patron.matcher(palabra);
 			if(!comentarioLargo)
 				if(palabra.charAt(0) == '/' && palabra.charAt(1) == '/') {
-					return;
+					
 				}
 			if(palabra.charAt(0) == '*') {
 				++comen;
