@@ -69,7 +69,6 @@ public class Palabritas implements Tipo {
 		for(int x = tokens.size()-1;x>=0;x--)
 			tokens.remove(x);
 		
-		System.out.print("\n\n\n");
 	}
 	private boolean comentarioLargo = false;
 	private int comen = 0;

@@ -88,9 +88,8 @@ public class Semantico implements Tipo {
 					break;
 				}
 			}catch(IndexOutOfBoundsException e) {
-				
+				// Esto se ignora 
 			}
-
 		}
 		if(!errorcin.isEmpty()) errorL+="ERRORES SEMANTICOS ENCONTRADOS: \n"+ errorcin;
 		return errorL;
@@ -104,7 +103,6 @@ public class Semantico implements Tipo {
 			if(iwexpresion.get(i).getTipo()!=PARENTESIS_A &&iwexpresion.get(i).getTipo()!=PARENTESIS_C && iwexpresion.get(i).getTipo()!=LLAVE_A )
 				expresion+= iwexpresion.get(i).getValor()+" ";
 		}
-		
 		if(!expresion.isEmpty())
 			evaluarExpresiones(expresion,iwexpresion.get(0).getRenglon());
 		if(!siLlave) noLlave = x;
@@ -115,16 +113,15 @@ public class Semantico implements Tipo {
 		int i = 0,orden = 0;
 		while(tok.hasMoreTokens()) {
 		 // b<3 && z
-			System.out.println(i);
 			String valor = tok.nextToken();
 			
 			if(valor.equals("&&") || valor.equals("!")) { tipo = ""; orden=0;} // si llegamos al operador and posiblemente cambie de tipo..
-			//System.out.println(tipo + " " + valor);
+			
 			if(!(valor.equals("&&") || valor.equals("!"))&& (tipo.isEmpty() || i == 0)) { // Para ver de que tipo es la expresion
 				if(valor.matches("[a-zA-Z]+([a-zA-Z]*)") && !valor.matches("[\\true\\false]")) {
 					if(tablaSimbolos.containsKey(valor)) {
 						tipo = tablaSimbolos.get(valor).getTipoDato();
-						System.out.println(tipo);
+						
 					}else {
 						errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ valor+ " :c QUE SE INTENTA USAR EN LA POSICION: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
 					}
@@ -143,12 +140,10 @@ public class Semantico implements Tipo {
 				if(tipo.equals("int")) {
 					if(valor.equals("<")) {
 						++orden;
-					System.out.println("<:"+orden);
 					}
 					if(valor.equals("!"))
 							errorcin+="ERROR SEMANTICO: INCOMPATIBILIDAD DE OPERANDOS *** " + valor + " *** NO SE PUEDEN USAR ESTOS OPERADORES LOGICOS PARA LA COMPARACION DEL TIPO INT EN LA LINEA "+renglon+".\n"; 
 					if(valor.matches("[0-9]+([0-9])*")) {++orden;
-					System.out.println("num:"+orden);
 					}
 					if(valor.matches("[a-zA-Z]+([a-zA-Z]*)")) {
 						if(tablaSimbolos.containsKey(valor)) { // QUE EL IDENTIFICADOR SE ENCUENTRE PREVIAMENTE DECLARADO
@@ -188,11 +183,9 @@ public class Semantico implements Tipo {
 				}
 				
 			}
-			System.out.println(orden + " " + valor);
 			i++;
 		}
-		System.out.println("orden: " + orden);
-			if(tipo.equals("int")&&!(orden==3)) errorcin+= "SE INTENTO ASIGNAR UN VALOR INT A LA EXPRESION ***" + expresion + "*** EN LA LINEA " + renglon + ".\n";
+			if(tipo.equals("int")&&!(orden==3)) errorcin+= "SE INTENTO COMPARAR UN VALOR INT A LA EXPRESION ***" + expresion + "*** EN LA LINEA " + renglon + " QUE ES DEL TIPO BOOLEAN.\n";
 		
 	}
 	private void declaracionMetodo(ArrayList<Token> meDeclar) {
@@ -246,7 +239,7 @@ public class Semantico implements Tipo {
 			}
 			for(int i = 0;i<alcances.size();i++) {
 				if(tablaSimbolos.get(variableExistente).getAlcance() == alcances.get(i)) {
-					System.out.println("alcances: " + alcances.get(i));
+					
 					siAlcanza = true;
 					break;
 				}
@@ -273,7 +266,6 @@ public class Semantico implements Tipo {
 		boolean datoCorrecto = false;
 		//boolean isObject = false;
 		String tipo = "";
-		System.out.println(varDeclar.get(0).getValor());
 		renglon = varDeclar.get(0).getRenglon();
 		switch(varDeclar.get(0).getTipo()) {
 		case IDENT:
@@ -291,13 +283,11 @@ public class Semantico implements Tipo {
 			break;
 		}
 		 
-		System.out.println("variable: " +  variable);
 		
 		// OBTENER EL VALOR DE LA VARIABLE
 		while(i<varDeclar.size()) {
 			if(varDeclar.get(i).getTipo() != PUNTO_COMA) {
 				valor += varDeclar.get(i).getValor() + " ";
-				System.out.println("valorvar"+varDeclar.get(i));
 				if (varDeclar.get(i).getTipo()==IDENT)
 					valorIdentificador.add(varDeclar.get(i).getValor());
 			}
@@ -423,6 +413,10 @@ public class Semantico implements Tipo {
 						//Verificar que exista
 						if(tablaSimbolos.containsKey(valorIdentificador.get(r))) {
 							identificador++;
+							if(!comprobarAlcance(obtenerAlcance(),valorIdentificador.get(r))) {
+								errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valorIdentificador.get(r) + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato()+" *** EN UNA OPERACION DE BOOLEAN EN LA LINEA "+ renglon + " Y SE ENCUENTRA FUERA DEL ALCANCE.\n"; 	
+								cambiarValor = false;
+							}
 							//Si existe verificamos el tipo de dato
 							if(!tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals(tipo)){
 								//Verificar si se trata de int

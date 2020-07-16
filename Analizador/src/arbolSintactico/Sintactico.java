@@ -93,7 +93,7 @@ public class Sintactico implements Tipo {
 							break;
 						}
 						checar++;
-						System.out.println(errores + " " + linea );
+
 					}
 				}
 				checar = 0;
