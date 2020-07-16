@@ -384,7 +384,7 @@ public class Semantico implements Tipo {
 		    			if(tok.equals("true")||tok.equals("false")) 
 		    				errorcin+="INTENTA ASIGNAR UN VALOR ***boolean*** EN LA VARIABLE *** "+variable+"*** QUE ES ***int***"+ " EN LA LINEA: "+renglon+ ".\n";
 		    			else
-		    				errorcin+= "ERROR SEMÃ�NTICO, LA VARIABLE: "+ tok+ " QUE SE INTENTA USAR EN LA POSICIÃ“N: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
+		    				errorcin+= "ERROR SEMÃ�NTICO, LA VARIABLE: "+ tok+ " QUE SE INTENTA USAR EN LA POSICION: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
 		    			valido = false;
 		    		}
 		    		
@@ -413,6 +413,9 @@ public class Semantico implements Tipo {
 			boolean cambiarValor=true;
 			int opInc=0;
 			int numerito=0; int identificador=0;
+			int opLogica=0;
+			
+				//hayNumeros=true;
 			if ((!(valor.equals("true "))) && (!(valor.equals("false ")))) {
 				//Verificar que sea un identificador
 				if(!valorIdentificador.isEmpty()) {
@@ -420,26 +423,21 @@ public class Semantico implements Tipo {
 						//Verificar que exista
 						if(tablaSimbolos.containsKey(valorIdentificador.get(r))) {
 							identificador++;
-							if(!comprobarAlcance(obtenerAlcance(),valorIdentificador.get(r))) {
-								errorcin+="SE INTENTO USAR LA VARIABLE: ***"+ valorIdentificador.get(r) + "*** QUE ES DE TIPO: *** " +tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato()+" *** EN UNA OPERACION DE BOOLEAN EN LA LINEA "+ renglon + " Y SE ENCUENTRA FUERA DEL ALCANCE.\n"; 	
-								cambiarValor = false;
-							}
 							//Si existe verificamos el tipo de dato
 							if(!tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals(tipo)){
 								//Verificar si se trata de int
 								if(tablaSimbolos.get(valorIdentificador.get(r)).getTipoDato().equals("int")) {
 									identificador++;
-									if (valorIdentificador.size()==1) {
-										errorcin+="Intenta asignar un tipo de dato*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***linea: "+ renglon+ ".\n";
-										cambiarValor=false;
-									}
-									else {
+									
 									//Verifico que haya un numeros o signos
-									char numeros []= {'0','1','2','3','4','5','6','7','8','9','&','<','>','!'};
+									char numeros []= {'0','1','2','3','4','5','6','7','8','9','&','<','>','!','(',')'};
 									for (int a=0; a<valor.length();a++) {
+										if(valor.charAt(a)=='<'||valor.charAt(a)=='!'||valor.charAt(a)=='&')
+											opLogica++;
 										for (int b=0; b<numeros.length;b++) {
 											if (valor.charAt(a)==numeros[b]) {
 												numerito=300;
+												
 												break;
 											}
 											if (b==numeros.length-1&&numerito!=300&&identificador==0) {
@@ -447,13 +445,23 @@ public class Semantico implements Tipo {
 												break;
 											}
 											if(valor.charAt(a)=='+'||valor.charAt(a)=='-'||valor.charAt(a)=='*'||valor.charAt(a)=='/') {
-												opInc++;
-												cambiarValor=false;
-												break;
+												
+												if(opLogica==0) {
+													opInc++;
+													cambiarValor=false;
+													break;
+												}
+												else if(expresion(valor)!=0)
+													errorcin+="Hay un error en una expresión **int** que se usa en asignación ***boolean** renglón: "+renglon+ ".\n";
+												
 											}
 										}
 									}
-								}
+									if (valorIdentificador.size()==1&&numerito!=300) {
+										errorcin+="Intenta asignar un tipo de dato*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***linea: "+ renglon+ ".\n";
+										cambiarValor=false;
+									}
+								
 								
 							}
 								else {
@@ -479,8 +487,10 @@ public class Semantico implements Tipo {
 			}
 				//Si no son identificadores y son solo numeros
 				//Verifico que haya un numeros o signos
-				char numeros []= {'0','1','2','3','4','5','6','7','8','9','&','<','>','!'};
+				char numeros []= {'0','1','2','3','4','5','6','7','8','9','&','<','>','!','(',')'};
 				for (int a=0; a<valor.length();a++) {
+					if(valor.charAt(a)=='<'||valor.charAt(a)=='!'||valor.charAt(a)=='&')
+						opLogica++;
 					for (int b=0; b<numeros.length;b++) {
 						if (valor.charAt(a)==numeros[b]) {
 							numerito=300;
@@ -489,10 +499,16 @@ public class Semantico implements Tipo {
 						}
 						if (b==numeros.length-1&&numerito!=300&&identificador==0) {
 							cambiarValor=false;
+							break;
 						}
 						if(valor.charAt(a)=='+'||valor.charAt(a)=='-'||valor.charAt(a)=='*'||valor.charAt(a)=='/') {
-							opInc++;
-							cambiarValor=false;
+							if(opLogica==0) {
+								opInc++;
+								cambiarValor=false;
+								break;
+							}
+							else if(expresion(valor)!=0)
+								errorcin+="Hay un error en una expresión **int** que se usa en asignación ***boolean** renglón: "+renglon+ ".\n";
 							
 						}
 					}
@@ -504,11 +520,35 @@ public class Semantico implements Tipo {
 				cambiarValor=false;
 			}
 				
-			if(opInc!=0)
+			if(opInc!=0&&opLogica==0)
 			errorcin+="Intenta asignar un tipo de operando*** "+ " int "+ " ***en un dato*** "+ tipo+ " ***linea: "+ renglon+ ".\n";
 			return cambiarValor;
 		}
-		
+		private int expresion (String valor) {
+			int expresion=0;
+			//Verifico que se trate de una operacion matematica
+			ArrayList <String>operandos=new ArrayList<String>();
+			String operador="";
+			int letra=0;
+			valor.replace(" ","");
+			while(valor.length()-1>=letra) {
+				if(valor.charAt(letra)!='('&&valor.charAt(letra)!=')'&&valor.charAt(letra)!='+'&&valor.charAt(letra)!='-'&&valor.charAt(letra)!='*'&&valor.charAt(letra)!='<'&&valor.charAt(letra)!=' ')
+				operador+=valor.charAt(letra);
+				if(valor.charAt(letra)=='+'||valor.charAt(letra)=='-'||valor.charAt(letra)=='*'||valor.charAt(letra)!='<') {
+					operandos.add(operador);
+					operador="";
+				}
+				letra++;
+			}
+			
+			//Cualquier problema con los operandos
+			for (int h=0; h<operandos.size();h++) {
+				if(!(operandos.get(h).matches("([0-9])*"))&&!(operandos.get(h).matches("[a-zA-Z]+([a-zA-Z0-9])*")))
+					expresion++;
+			}
+			operandos.clear();
+			return expresion;
+		}
 	
 }
 

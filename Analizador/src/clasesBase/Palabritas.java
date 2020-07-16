@@ -225,7 +225,7 @@ public class Palabritas implements Tipo {
 	private String espacios(String cadena) {
 		
 		for(int i = 0;i<signos.length;i++) {
-			System.out.println(cadena);
+			
 				cadena = cadena.replace(signos[i], "@");
 				cadena = cadena.replace("@"," " + signos[i] + " ");
 		
