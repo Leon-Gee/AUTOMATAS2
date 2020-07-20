@@ -32,7 +32,12 @@ public class Semantico implements Tipo {
 		alcance = new ArrayList<Integer>();
 		expresiones =  "";
 	}
-	
+	public String getExpresion(String varible) {
+		return tablaSimbolos.get(varible).getValor();
+	}
+	public String getExpresiones() {
+		return expresiones;
+	}
 	public String[] getColumnas() {
 		return columnas;
 	}
