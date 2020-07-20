@@ -105,13 +105,13 @@ public class CodigoIntermedio {
 	
 	// ire a comer uwu
 	private void cuadruplos() {
-		
+		StringTokenizer variable = new StringTokenizer(expresiones, " ");
 		for(int i = 0;i<posfija.size();i++) {
 			Vector<Vector<String>> rowData = new Vector<Vector<String>>();
 			StringTokenizer posfijo = new StringTokenizer(posfija.get(i)," ");
 			
 			int tempCount = 1;
-			StringTokenizer variable = new StringTokenizer(expresiones, " ");
+			
 			while(posfijo.hasMoreTokens()) {
 				Vector<String> expresion = new Vector<String>();
 				String valor = posfijo.nextToken();
@@ -134,6 +134,8 @@ public class CodigoIntermedio {
 			String var = "";
 			if(variable.hasMoreTokens()) {
 				var = variable.nextToken();
+			}
+				System.out.println(var);
 				int row = rowData.size()-1;
 				int dato = rowData.get(row).size()-1;
 				String temporal = rowData.get(row).get(dato);
@@ -142,7 +144,7 @@ public class CodigoIntermedio {
 				rowData.get(rowData.size()-1).add(pila.remove(pila.size()-1));
 				rowData.get(rowData.size()-1).add(" ");
 				rowData.get(rowData.size()-1).add(var);
-			}
+			
 			jTCuadruplos.put(i,new ArrayList<Vector>());
 			Vector<String> expresioncita = new Vector<String>();
 			expresioncita.add(var);
