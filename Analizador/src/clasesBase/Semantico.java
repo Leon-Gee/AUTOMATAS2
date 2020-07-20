@@ -35,6 +35,9 @@ public class Semantico implements Tipo {
 	public String getExpresion(String varible) {
 		return tablaSimbolos.get(varible).getValor();
 	}
+	public String getPosicion(String variable) {
+		return tablaSimbolos.get(variable).getPosicion()+"";
+	}
 	public String getExpresiones() {
 		return expresiones;
 	}

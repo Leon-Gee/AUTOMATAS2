@@ -1,17 +1,29 @@
 package clasesBase;
 
+import java.awt.BorderLayout;
 import java.util.*;
+
+import javax.swing.*;
 
 public class CodigoIntermedio {
 	private Semantico semantico;
 	private String expresiones;
 	private ArrayList<String> pila;
 	private ArrayList<String> posfija;
+	private Vector<String> columnName;
+	private HashMap<Integer,ArrayList<Vector>> jTCuadruplos;
 	public CodigoIntermedio(Semantico sem) {
 		semantico = sem;
 		expresiones = semantico.getExpresiones();
 		pila = new ArrayList<String>();
 		posfija = new ArrayList<String>();
+		columnName = new Vector<String>();
+		jTCuadruplos = new HashMap<Integer,ArrayList<Vector>>();
+		
+		columnName.add("Operador");
+		columnName.add("Operando");
+		columnName.add("Operando2");
+		columnName.add("Resultado");
 	}
 	
 	public void evaluarExpresion() { // Proximo a pensar
@@ -21,6 +33,7 @@ public class CodigoIntermedio {
 			variable = var.nextToken();
 			posfijo(variable);
 		}
+		cuadruplos();
 		System.out.println(posfija.toString());
 	}
 	private void posfijo(String variable) {
@@ -86,7 +99,68 @@ public class CodigoIntermedio {
 		while(!pila.isEmpty()) {
 			posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 			i--;
+		}		
+		
+	}
+	
+	// ire a comer uwu
+	private void cuadruplos() {
+		Vector<Vector<String>> rowData = new Vector<Vector<String>>();
+		for(int i = 0;i<posfija.size();i++) {
+			StringTokenizer posfijo = new StringTokenizer(posfija.get(i)," ");
+			
+			int tempCount = 1;
+			StringTokenizer variable = new StringTokenizer(expresiones, " ");
+			while(posfijo.hasMoreTokens()) {
+				Vector<String> expresion = new Vector<String>();
+				String valor = posfijo.nextToken();
+				if(valor.matches("[0-9]+([0-9])*")||valor.matches("[a-zA-Z]+([a-zA-Z0-9])*")) {
+					pila.add(valor);
+				}else {
+					String operand2 = pila.remove(pila.size()-1),operand1 = pila.remove(pila.size()-1);
+					expresion.add(valor);
+					expresion.add(operand1);
+					expresion.add(operand2);
+					expresion.add("T"+tempCount);
+					
+					pila.add("T"+tempCount);
+					tempCount++;
+				}
+				if(!expresion.isEmpty())
+				rowData.add(expresion);
+				
+			}
+			String var = "";
+			if(variable.hasMoreTokens()) {
+				var = variable.nextToken();
+				int row = rowData.size()-1;
+				int dato = rowData.get(row).size()-1;
+				String temporal = rowData.get(row).get(dato);
+				rowData.add(new Vector<String>());
+				rowData.get(rowData.size()-1).add(":=");
+				rowData.get(rowData.size()-1).add(temporal);
+				rowData.get(rowData.size()-1).add(" ");
+				rowData.get(rowData.size()-1).add(var);
+			}
+			jTCuadruplos.put(i,new ArrayList<Vector>());
+			Vector<String> expresioncita = new Vector<String>();
+			expresioncita.add(var);
+			expresioncita.add(semantico.getExpresion(var));
+			expresioncita.add(semantico.getPosicion(var));
+			jTCuadruplos.get(i).add(expresioncita); // Es para poder hacer los JTable
+			jTCuadruplos.get(i).add(rowData);
+			
+			System.out.println(rowData.toString());
 		}
+		// Interacciones para mostrar los cuadruplos XD...
+		// Es mucho rollo <3
+		JFrame ventana = new JFrame("PRUEBA " + ((Vector<String>)jTCuadruplos.get(0).get(0)).get(0) + " = " + ((Vector<String>)jTCuadruplos.get(0).get(0)).get(1) + " #" + ((Vector<String>)jTCuadruplos.get(0).get(0)).get(2));
+		ventana.setVisible(true);
+		
+		JTable table = new JTable((Vector<Vector<String>>)jTCuadruplos.get(0).get(1), columnName);
+
+	    JScrollPane scrollPane = new JScrollPane(table);
+	    ventana.add(scrollPane, BorderLayout.CENTER);
 	}
 	private String watchElemento() {
 		if(!pila.isEmpty())
