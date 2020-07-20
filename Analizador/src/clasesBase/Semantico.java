@@ -22,12 +22,15 @@ public class Semantico implements Tipo {
 	private ArrayList<String> valorIdentificador=new ArrayList<String>();
 	private ArrayList<ArrayList<Token>> tokens;
 	private boolean isDeclaracion = false, isused=false;
+	private boolean expresion = false;
+	private String expresiones;
 	public Semantico(ArrayList<ArrayList<Token>> tokens) {
 		this.tokens = tokens;
 		columnas = new String[5];
 		filas = new String[tokens.size()][5];
 		tablaSimbolos = new HashMap<String, TablaSimbolos>();
 		alcance = new ArrayList<Integer>();
+		expresiones =  "";
 	}
 	
 	public String[] getColumnas() {
@@ -92,6 +95,7 @@ public class Semantico implements Tipo {
 			}
 		}
 		if(!errorcin.isEmpty()) errorL+="ERRORES SEMANTICOS ENCONTRADOS: \n"+ errorcin;
+		System.out.println(expresiones);
 		return errorL;
 	}
 
@@ -239,7 +243,6 @@ public class Semantico implements Tipo {
 			}
 			for(int i = 0;i<alcances.size();i++) {
 				if(tablaSimbolos.get(variableExistente).getAlcance() == alcances.get(i)) {
-					
 					siAlcanza = true;
 					break;
 				}
@@ -256,7 +259,9 @@ public class Semantico implements Tipo {
 		filas[fila][3] = valor;
 		filas[fila][4] = obtenerAlcance()+"";
 		
+		
 		tablaSimbolos.put(variable, new TablaSimbolos(variable, tipo, renglon, valor,fila, obtenerAlcance()));
+		
 		fila++;
 	}
 	// Si es declaraciÃ³n de variable
@@ -272,7 +277,6 @@ public class Semantico implements Tipo {
 			if(varDeclar.get(1).getTipo() == IGUAL) { // si es directamente una variable
 				variable = varDeclar.get(0).getValor();
 				i = 2;
-				
 			}
 			break;
 			default:
@@ -328,7 +332,12 @@ public class Semantico implements Tipo {
 				errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICION: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
 			}
 		}
-			
+		if(expresion) { // La variable se agrega a una cadena, que contiene las variables uwu
+			expresiones+= " " + variable;
+			expresion = false;
+		}else { // Se elimina de la cadena si llega a perder el hecho de que es.. expresión, shale :c
+			expresiones = expresiones.replace(variable, "");
+		}
 	}
 	
 	
@@ -353,8 +362,10 @@ public class Semantico implements Tipo {
 	//VERIFICACIÃ“N DE LAS DECLARACIONES DE VARIABLES
 		 //Tipo INT
 		private boolean isEntero(String variable, String valor,int renglon) {
+			String exp = "";
 			boolean valido=true;
 			StringTokenizer token = new StringTokenizer(valor, " ");
+			int countTokens = token.countTokens();
 		    while(token.hasMoreTokens()) {
 		    	valorIdentificador.clear();
 		    	String tok = token.nextToken(" ");
@@ -387,15 +398,26 @@ public class Semantico implements Tipo {
 		    		}
 		    		// EN CASO DE QUE EXISTAN MAS COINCIDENCIAS.... 
 		    		if(!tok.matches("[0-9]+([0-9])*")) 
-		    			if(!tok.matches("[\\+\\-\\*\\/]"))  
+		    			if(!tok.matches("[\\+\\-\\*\\/]")) {  
 		    				if(!tok.matches("[\\(\\)]")) {
 		    					errorcin+="EL VALOR DE LA VARIABLE: ***"+ variable+ "*** DEBE SER DE TIPO INT Y LE INTENTA COLOCAR EL VALOR: *** " + valor+" ***.\n"; 
 		    					valido = false;
+		    					expresion = false;
+		    				}else {
+		    					expresion = true;
 		    				}
-		    		}
+		    			}else {
+		    				expresion = true;
+		    			}
+		    		
+		    			
+		    	}
 		    	
 		    }
-			return valido;
+		    if(!valido) expresion = valido;
+		    else if(countTokens == 1) expresion = false;
+		    
+ 			return valido;
 		}
 
 		private boolean verificarBoolean (String variable, String valor,int renglon,String tipo) {
