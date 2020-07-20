@@ -105,8 +105,9 @@ public class CodigoIntermedio {
 	
 	// ire a comer uwu
 	private void cuadruplos() {
-		Vector<Vector<String>> rowData = new Vector<Vector<String>>();
+		
 		for(int i = 0;i<posfija.size();i++) {
+			Vector<Vector<String>> rowData = new Vector<Vector<String>>();
 			StringTokenizer posfijo = new StringTokenizer(posfija.get(i)," ");
 			
 			int tempCount = 1;
@@ -147,20 +148,26 @@ public class CodigoIntermedio {
 			expresioncita.add(var);
 			expresioncita.add(semantico.getExpresion(var));
 			expresioncita.add(semantico.getPosicion(var));
+			
 			jTCuadruplos.get(i).add(expresioncita); // Es para poder hacer los JTable
 			jTCuadruplos.get(i).add(rowData);
-			rowData.clear();
+			
+			
 			System.out.println(rowData.toString());
+			
 		}
 		// Interacciones para mostrar los cuadruplos XD...
 		// Es mucho rollo <3
-		JFrame ventana = new JFrame("PRUEBA " + ((Vector<String>)jTCuadruplos.get(0).get(0)).get(0) + " = " + ((Vector<String>)jTCuadruplos.get(0).get(0)).get(1) + " #" + ((Vector<String>)jTCuadruplos.get(0).get(0)).get(2));
-		ventana.setVisible(true);
+		for(int i = 0;i<jTCuadruplos.size();i++) {
+			JFrame ventana = new JFrame("PRUEBA " + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(0) + " = " + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(1) + " #" + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(2));
+			ventana.setVisible(true);
+			
+			JTable table = new JTable((Vector<Vector<String>>)jTCuadruplos.get(i).get(1), columnName);
+	
+		    JScrollPane scrollPane = new JScrollPane(table);
+		    ventana.add(scrollPane, BorderLayout.CENTER);
+		}
 		
-		JTable table = new JTable((Vector<Vector<String>>)jTCuadruplos.get(0).get(1), columnName);
-
-	    JScrollPane scrollPane = new JScrollPane(table);
-	    ventana.add(scrollPane, BorderLayout.CENTER);
 	}
 	private String watchElemento() {
 		if(!pila.isEmpty())
