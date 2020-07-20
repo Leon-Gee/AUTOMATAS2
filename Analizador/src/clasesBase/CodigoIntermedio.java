@@ -160,6 +160,7 @@ public class CodigoIntermedio {
 		}
 		// Interacciones para mostrar los cuadruplos XD...
 		// Es mucho rollo <3
+		// Solo es un ejemplo.. Please no se fien de que esto lo muestra por que ni lo muestra bien xD...
 		for(int i = 0;i<jTCuadruplos.size();i++) {
 			JFrame ventana = new JFrame("PRUEBA " + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(0) + " = " + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(1) + " #" + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(2));
 			ventana.setVisible(true);
