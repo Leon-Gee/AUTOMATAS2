@@ -67,7 +67,7 @@ public class Palabritas implements Tipo {
 		semantico = new Semantico(tokens);
 		errorL += semantico.generarTablaSimbolos();
 		codigoInter = new CodigoIntermedio(semantico);
-		
+		codigoInter.evaluarExpresion();
 		for(int x = tokens.size()-1;x>=0;x--)
 			tokens.remove(x);
 		

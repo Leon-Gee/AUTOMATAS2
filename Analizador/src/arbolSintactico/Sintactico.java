@@ -490,6 +490,7 @@ public class Sintactico implements Tipo {
 					break;
 				case IGUAL:
 					esp.add(NUM);
+					esp.add(RESTA);
 					esp.add(NEW);
 					esp.add(IDENT);
 					esp.add(PARENTESIS_A);
@@ -510,6 +511,7 @@ public class Sintactico implements Tipo {
 					esp.add(IDENT);
 					esp.add(NUM);
 					esp.add(PARENTESIS_A);
+					if(tokens.get(i).getTipo() == POR) esp.add(RESTA);
 					break;
 				case CORCHETE_A:
 					esp.add(NUM);
@@ -797,6 +799,9 @@ public class Sintactico implements Tipo {
 					esp.add(PARENTESIS_A); // num = num*(this.ALGo);M 
 					esp.add(THIS);
 					esp.add(NUM);
+				}
+				if(tipo == POR || tipo == IGUAL) {
+					esp.add(RESTA);
 				}
 				if(tipo == IDENT || tipo == NUM || tipo == LENGTH || tipo == CORCHETE_C || tipo == PARENTESIS_C) {
 					esp.add(SUMA);
