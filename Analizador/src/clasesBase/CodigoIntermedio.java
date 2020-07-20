@@ -127,7 +127,7 @@ public class CodigoIntermedio {
 					tempCount++;
 				}
 				if(!expresion.isEmpty())
-				rowData.add(expresion);
+					rowData.add(expresion);
 				
 			}
 			String var = "";
@@ -138,7 +138,7 @@ public class CodigoIntermedio {
 				String temporal = rowData.get(row).get(dato);
 				rowData.add(new Vector<String>());
 				rowData.get(rowData.size()-1).add(":=");
-				rowData.get(rowData.size()-1).add(temporal);
+				rowData.get(rowData.size()-1).add(pila.remove(pila.size()-1));
 				rowData.get(rowData.size()-1).add(" ");
 				rowData.get(rowData.size()-1).add(var);
 			}
@@ -149,7 +149,7 @@ public class CodigoIntermedio {
 			expresioncita.add(semantico.getPosicion(var));
 			jTCuadruplos.get(i).add(expresioncita); // Es para poder hacer los JTable
 			jTCuadruplos.get(i).add(rowData);
-			
+			rowData.clear();
 			System.out.println(rowData.toString());
 		}
 		// Interacciones para mostrar los cuadruplos XD...
