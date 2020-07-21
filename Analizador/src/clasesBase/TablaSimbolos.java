@@ -1,7 +1,7 @@
 package clasesBase;
 
 public class TablaSimbolos {
-	
+
 
 	private int fila;
 	private String nombre;

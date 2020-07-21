@@ -1,6 +1,7 @@
 package clasesBase;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.util.*;
 
 import javax.swing.*;
@@ -33,8 +34,15 @@ public class CodigoIntermedio {
 			variable = var.nextToken();
 			posfijo(variable);
 		}
-		cuadruplos();
 		System.out.println(posfija.toString());
+		cuadruplos();
+		
+	}
+	public HashMap<Integer,ArrayList<Vector>> tablaCuadruplos() {
+		return jTCuadruplos;
+	}
+	public Vector<String> columnName(){
+		return columnName;
 	}
 	private void posfijo(String variable) {
 		String expresion = semantico.getExpresion(variable);
@@ -106,6 +114,7 @@ public class CodigoIntermedio {
 	// ire a comer uwu
 	private void cuadruplos() {
 		StringTokenizer variable = new StringTokenizer(expresiones, " ");
+		JTable table = null;
 		for(int i = 0;i<posfija.size();i++) {
 			Vector<Vector<String>> rowData = new Vector<Vector<String>>();
 			StringTokenizer posfijo = new StringTokenizer(posfija.get(i)," ");
@@ -154,18 +163,6 @@ public class CodigoIntermedio {
 			
 			System.out.println(rowData.toString());
 			
-		}
-		// Interacciones para mostrar los cuadruplos XD...
-		// Es mucho rollo <3
-		// Solo es un ejemplo.. Please no se fien de que esto lo muestra por que ni lo muestra bien xD...
-		for(int i = 0;i<jTCuadruplos.size();i++) {
-			JFrame ventana = new JFrame("PRUEBA " + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(0) + " = " + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(1) + " #" + ((Vector<String>)jTCuadruplos.get(i).get(0)).get(2));
-			ventana.setVisible(true);
-			
-			JTable table = new JTable((Vector<Vector<String>>)jTCuadruplos.get(i).get(1), columnName);
-	
-		    JScrollPane scrollPane = new JScrollPane(table);
-		    ventana.add(scrollPane, BorderLayout.CENTER);
 		}
 		
 	}

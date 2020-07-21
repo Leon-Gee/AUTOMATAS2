@@ -11,7 +11,7 @@ package clasesBase;
 import java.util.*;
 import java.util.regex.*;
 
-import javax.swing.JTable;
+import javax.swing.*;
 
 import arbolSintactico.Sintactico;
 
@@ -41,6 +41,13 @@ public class Palabritas implements Tipo {
 	
 	public JTable tablaSimbolos() {
 		return new JTable(semantico.getFilas(), semantico.getColumnas());
+	}
+	public HashMap<Integer,ArrayList<Vector>> tablaCuadruplos() {
+		
+		return codigoInter.tablaCuadruplos();
+	}
+	public Vector<String> columnName(){
+		return codigoInter.columnName();
 	}
 	public void analizador() {
 		tokenizador = new StringTokenizer(codigo);

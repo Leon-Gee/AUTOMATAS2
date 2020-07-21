@@ -1,6 +1,10 @@
 
 package event;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.*;
 import java.util.StringTokenizer;
@@ -64,14 +68,36 @@ public class eventMngr implements ActionListener{
 			palabritas.analizador();
 			resultado.setText(palabritas.getErrorL());
 			
-			if(consolaTabla.getTabCount()> 1)
-				consolaTabla.removeTabAt(1);
+			if(consolaTabla.getTabCount()> 1) {
+					consolaTabla.removeTabAt(1);
+					if(consolaTabla.getTabCount()>1)
+						consolaTabla.removeTabAt(1);
+			}
 			
 			JScrollPane contiene1;
 			contiene1 = new JScrollPane(palabritas.tablaSimbolos());
-
+			
 			consolaTabla.add("Tabla Simbolos",contiene1);
 			
+			
+			JPanel cuadruplos = new JPanel();
+			cuadruplos.setLayout(null);
+			cuadruplos.setLayout(new BoxLayout(cuadruplos,BoxLayout.PAGE_AXIS));
+
+			for(int i=0; i<palabritas.tablaCuadruplos().size(); i++) {
+				
+				JLabel etiquetaCuadruplo = new JLabel(palabritas.tablaCuadruplos().get(i).get(0).get(0) + " = " + palabritas.tablaCuadruplos().get(i).get(0).get(1) + " || Renglon #" +palabritas.tablaCuadruplos().get(i).get(0).get(2));
+				JTable table =new JTable(palabritas.tablaCuadruplos().get(i).get(1), palabritas.columnName());
+				JScrollPane cuadruploTabla = new JScrollPane(table);
+				cuadruploTabla.add(etiquetaCuadruplo);
+				cuadruploTabla.setPreferredSize(new Dimension(50,table.getRowCount()*50));
+				
+				cuadruplos.add(etiquetaCuadruplo);
+				cuadruplos.add(cuadruploTabla);
+				
+			}
+			JScrollPane contiene2 = new JScrollPane(cuadruplos);
+			consolaTabla.add("Cuadruplos", contiene2);
 			
 		}
 		//evento para boton salir
