@@ -762,6 +762,7 @@ public class Sintactico implements Tipo {
 		ArrayList<Integer> esp = new ArrayList<Integer>();
 		ArrayList<Integer> P_A = new ArrayList<Integer>();
 		boolean noTiene= false;
+		boolean isIgual = false;
 		int posicion = 0;
 		for(int i = checar;i<tokens.size();i++) {
 			for(int q = 0;q<esp.size();q++) {
@@ -773,7 +774,7 @@ public class Sintactico implements Tipo {
 				}
 			}//khe? nose xdxdxd
 			int tipo = tokens.get(i).getTipo();
-			boolean isIgual = false;
+			
 			if(esp.size() == 0) {
 				if(tipo == IDENT ) {
 					esp.add(IGUAL);
@@ -782,7 +783,9 @@ public class Sintactico implements Tipo {
 					if(i!=checar && isIgual)
 						esp.add(PUNTO_COMA);
 				}
-				isIgual = ( tipo == IGUAL );
+				if(tipo == IGUAL)
+					isIgual = ( tipo == IGUAL );
+				
 				if(tipo == THIS || tipo == IDENT) {
 					esp.add(PUNTO);
 				}
@@ -792,6 +795,7 @@ public class Sintactico implements Tipo {
 					
 				if(tipo != NUM && tipo != THIS &&tipo != LENGTH && tipo != CORCHETE_C && tipo != PARENTESIS_C && tipo != PUNTO_COMA && tipo != TRUE && tipo != FALSE) {
 					esp.add(IDENT);
+					
 				}
 				if(tipo == CORCHETE_A || tipo == IGUAL)
 					noTiene = true;

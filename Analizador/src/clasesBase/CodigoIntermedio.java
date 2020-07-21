@@ -135,10 +135,7 @@ public class CodigoIntermedio {
 			if(variable.hasMoreTokens()) {
 				var = variable.nextToken();
 			}
-				System.out.println(var);
-				int row = rowData.size()-1;
-				int dato = rowData.get(row).size()-1;
-				String temporal = rowData.get(row).get(dato);
+				
 				rowData.add(new Vector<String>());
 				rowData.get(rowData.size()-1).add(":=");
 				rowData.get(rowData.size()-1).add(pila.remove(pila.size()-1));

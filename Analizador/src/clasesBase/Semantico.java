@@ -103,7 +103,7 @@ public class Semantico implements Tipo {
 			}
 		}
 		if(!errorcin.isEmpty()) errorL+="ERRORES SEMANTICOS ENCONTRADOS: \n"+ errorcin;
-		System.out.println(expresiones);
+
 		return errorL;
 	}
 
@@ -341,6 +341,7 @@ public class Semantico implements Tipo {
 			}
 		}
 		if(expresion) { // La variable se agrega a una cadena, que contiene las variables uwu
+			expresiones = expresiones.replace(variable, "");
 			expresiones+= " " + variable;
 			expresion = false;
 		}else { // Se elimina de la cadena si llega a perder el hecho de que es.. expresión, shale :c
@@ -422,8 +423,9 @@ public class Semantico implements Tipo {
 		    	}
 		    	
 		    }
+		    
 		    if(!valido) expresion = valido;
-		    else if(countTokens == 1) expresion = false;
+		    else expresion = !valor.isEmpty();
 		    
  			return valido;
 		}
