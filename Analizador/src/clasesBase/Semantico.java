@@ -8,7 +8,6 @@
 
 package clasesBase;
 
-import java.util.HashMap;
 import java.util.*;
 
 
@@ -24,6 +23,7 @@ public class Semantico implements Tipo {
 	private boolean isDeclaracion = false, isused=false;
 	private boolean expresion = false;
 	private String expresiones;
+	private CodigoIntermedio codigoInter;
 	public Semantico(ArrayList<ArrayList<Token>> tokens) {
 		this.tokens = tokens;
 		columnas = new String[5];
@@ -31,6 +31,7 @@ public class Semantico implements Tipo {
 		tablaSimbolos = new HashMap<String, TablaSimbolos>();
 		alcance = new ArrayList<Integer>();
 		expresiones =  "";
+		codigoInter = new CodigoIntermedio(this);
 	}
 	public String getExpresion(String varible) {
 		return tablaSimbolos.get(varible).getValor();
@@ -264,6 +265,12 @@ public class Semantico implements Tipo {
 
 		return siAlcanza;
 	}
+	public HashMap<Integer,ArrayList<Vector>> tablaCuadruplos() {
+		return codigoInter.tablaCuadruplos();
+	}
+	public Vector<String> columnName(){
+		return codigoInter.columnName();
+	}
 	private void agregarValor(String variable, String tipo, int renglon, String valor) {
 		filas[fila][0] = variable;
 		filas[fila][1] = tipo;
@@ -273,7 +280,15 @@ public class Semantico implements Tipo {
 		
 		
 		tablaSimbolos.put(variable, new TablaSimbolos(variable, tipo, renglon, valor,fila, obtenerAlcance()));
-		
+		if(expresion) {
+			codigoInter.addExpresion(variable);
+			codigoInter.addExpresiones_var(valor);
+			codigoInter.addRenglon(renglon+"");
+			expresion = false;
+			codigoInter.evaluarExpresion(variable,valor);
+			codigoInter.removeExpresion(variable);
+			
+		}
 		fila++;
 	}
 	// Si es declaraciÃ³n de variable
@@ -334,8 +349,17 @@ public class Semantico implements Tipo {
 					}
 				
 					if(datoCorrecto) { // ModificaciÃƒÂ³n en la tabla de simbolos :D
-						filas[tablaSimbolos.get(variable).getFila()][3] = valor;
-						tablaSimbolos.get(variable).setValor(valor);
+						
+						/*filas[tablaSimbolos.get(variable).getFila()][3] = valor;
+						tablaSimbolos.get(variable).setValor(valor);*/
+						if(expresion) {
+							codigoInter.addExpresion(variable);
+							codigoInter.addExpresiones_var(valor);
+							codigoInter.addRenglon(renglon+"");
+							expresion = false;
+							codigoInter.evaluarExpresion(variable,valor);
+							codigoInter.removeExpresion(variable);
+						}
 					}
 				}else {
 					errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICION: "+renglon+" SE ENCUENTRA FUERA DEL ALCANCE.\n";
@@ -344,13 +368,13 @@ public class Semantico implements Tipo {
 				errorcin+= "ERROR SEMANTICO, LA VARIABLE: "+ variable+ " QUE SE INTENTA USAR EN LA POSICION: "+renglon+" NO SE ENCUENTRA DECLARADA"+".\n";
 			}
 		}
-		if(expresion) { // La variable se agrega a una cadena, que contiene las variables uwu
+		/*if(expresion) { // La variable se agrega a una cadena, que contiene las variables uwu
 			expresiones = expresiones.replace(variable, "");
 			expresiones+= " " + variable;
 			expresion = false;
 		}else { // Se elimina de la cadena si llega a perder el hecho de que es.. expresión, shale :c
 			expresiones = expresiones.replace(variable, "");
-		}
+		}*/
 	}
 	
 	

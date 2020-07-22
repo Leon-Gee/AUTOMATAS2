@@ -44,10 +44,10 @@ public class Palabritas implements Tipo {
 	}
 	public HashMap<Integer,ArrayList<Vector>> tablaCuadruplos() {
 		
-		return codigoInter.tablaCuadruplos();
+		return semantico.tablaCuadruplos();
 	}
 	public Vector<String> columnName(){
-		return codigoInter.columnName();
+		return semantico.columnName();
 	}
 	public void analizador() {
 		tokenizador = new StringTokenizer(codigo);
@@ -73,8 +73,8 @@ public class Palabritas implements Tipo {
 		errorL += Sintactico.VerificadorSintactico(tokens);
 		semantico = new Semantico(tokens);
 		errorL += semantico.generarTablaSimbolos();
-		codigoInter = new CodigoIntermedio(semantico);
-		codigoInter.evaluarExpresion();
+		//codigoInter = new CodigoIntermedio(semantico);
+		//codigoInter.evaluarExpresion();
 		for(int x = tokens.size()-1;x>=0;x--)
 			tokens.remove(x);
 		

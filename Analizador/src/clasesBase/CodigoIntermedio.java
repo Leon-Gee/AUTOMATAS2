@@ -14,7 +14,15 @@ public class CodigoIntermedio {
 	private Vector<String> columnName;
 	private HashMap<Integer,ArrayList<Vector>> jTCuadruplos;
 	private HashMap<String, TablaSimbolos> tablaSimbolos;
+	private String expresiones_var = "";
 	Vector<Vector<String>> cuadruplo=new Vector<Vector<String>>();
+	public void addExpresion(String exp) {
+		expresiones.replace(exp,"");
+		expresiones= exp;
+	}
+	public void removeExpresion(String exp) {
+		expresiones.replace(exp,"");
+	}
 	public CodigoIntermedio(Semantico sem) {
 		semantico = sem;
 		expresiones = semantico.getExpresiones();
@@ -29,8 +37,14 @@ public class CodigoIntermedio {
 		columnName.add("Resultado");
 	}
 	//Pruebita de evaluaci�n de expresiones
-	public void evaluacionExpresion (Vector<Vector<String>> cuadruplo) {
+	private void evaluacionExpresion () {
 		System.out.println("Tabla:" +tablaSimbolos.size());
+		System.out.println(cuadruplo.toString());
+		for(int i = 0;i<jTCuadruplos.size();i++) {
+
+			System.out.println(jTCuadruplos.get(i).get(1).getClass());
+			cuadruplo.add((Vector<String>)jTCuadruplos.get(i).get(1));
+		}
 		System.out.println(cuadruplo.toString());
 		int resultado=0;
 		int num1=0, num2=0;
@@ -46,15 +60,17 @@ public class CodigoIntermedio {
 				System.out.println("Cuadruplo: "+cuadruplo.get(i).toString());
 					for (int j=0; j<cuadruplo.get(i).size();j++) {
 						System.out.println(j);
+						System.out.println(cuadruplo.get(i).toString());
+						System.out.println("Aqui: " + cuadruplo.get(i).get(0).getClass());
 					if(j==0&&cuadruplo.get(i).get(j).equals("*"))
 						operador='*';
 					else if(j==0&&cuadruplo.get(i).get(j).equals("+")) 
 						operador='+';
 					else if (j==0&&cuadruplo.get(i).get(j).equals("-"))
-						operador='-';
+					operador='-';
 					else if(j==0&&cuadruplo.get(i).get(j).equals(":=")) { //Se trata de una asignacion
-						//System.out.println("introduce Valor: ");
-						//System.out.println((cuadruplo.get(i).get(2).equals(" ")));
+						System.out.println("introduce Valor: ");
+						System.out.println((cuadruplo.get(i).get(2).equals(" ")));
 						if(cuadruplo.get(i).get(2).equals(" ")&&valorVar.isEmpty()) {
 							tablaSimbolos.get(cuadruplo.get(i).get(3)).setValor(cuadruplo.get(i).get(1));
 							//Falta cambiar valor en la impresion 
@@ -64,7 +80,6 @@ public class CodigoIntermedio {
 						else {
 							tablaSimbolos.get(cuadruplo.get(i).get(3)).setValor(valorVar.get(valorVar.size()-1).toString());
 							//System.out.println(valorVar.get(0));
-							semantico.getFilas()[tablaSimbolos.get(cuadruplo.get(i).get(3)).getFila()][3] = valorVar.get(valorVar.size()-1).toString();
 							
 							varTemp.clear();
 							valorVar.clear();
@@ -141,7 +156,21 @@ public class CodigoIntermedio {
 		valorVar.clear();
 		//System.out.println("CambiaVAlor:"+tablaSimbolos.get("c").getValor());
 	}
-	
+	public int evaluacionExpresion(String operador, int num1, int num2) {
+		int result = 0;
+		switch(operador) {
+			case "*":
+				result =  num1*num2;
+				break;
+			case "-":
+				result = (num1-num2);
+			break;
+			case "+":
+				result = (num1+num2);
+				break;
+		}
+		return result;
+	}
 	public void evaluarExpresion() { // Proximo a pensar
 		StringTokenizer var = new StringTokenizer(expresiones," ");
 		String variable = "";
@@ -150,8 +179,23 @@ public class CodigoIntermedio {
 			posfijo(variable);
 		}
 		System.out.println(posfija.toString());
-		cuadruplo=cuadruplos();
-		evaluacionExpresion(cuadruplo);
+	//cuadruplo=cuadruplos();
+		cuadruplos();
+		//evaluacionExpresion();
+		
+	}
+	private String renglon = "";
+	public void addRenglon(String ren) {
+		this.renglon = ren;
+	}
+	public void evaluarExpresion(String var,String expresion) { // Proximo a pensar
+		
+		posfijo(var,expresion);
+		//System.out.println(posfija.toString());
+	//cuadruplo=cuadruplos();
+		cuadruplos();
+		++ultimoElemento;
+		//evaluacionExpresion();
 		
 	}
 	public HashMap<Integer,ArrayList<Vector>> tablaCuadruplos() {
@@ -162,11 +206,20 @@ public class CodigoIntermedio {
 	}
 	private void posfijo(String variable) {
 		String expresion = semantico.getExpresion(variable);
-		StringTokenizer exp = new StringTokenizer(expresion, " ");
+		
 		// Comenzando a analizar al expresión...
+		posfijo(variable,expresion);	
+	}
+	public void addExpresiones_var(String expresion) {
+		expresiones_var = expresion;
+	}
+	public void posfijo(String var, String expresion) {
+		//expresiones_var += expresion+"_";
+		StringTokenizer exp = new StringTokenizer(expresion, " ");
 		posfija.add("");
 		boolean op = false;
 		int countTokens = 0;
+		
 		while(exp.hasMoreTokens()) {
 			++countTokens;
 			String token = exp.nextToken();
@@ -225,25 +278,42 @@ public class CodigoIntermedio {
 			posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 			i--;
 		}		
-		
 	}
 	
+	int ultimoElemento = 0;
 	// ire a comer uwu
-	private Vector<Vector<String>> cuadruplos() {
+	private void cuadruplos() {
 		StringTokenizer variable = new StringTokenizer(expresiones, " ");
-		JTable table = null;
-		Vector<Vector<String>> rowData = new Vector<Vector<String>>();
-		for(int i = 0;i<posfija.size();i++) {
-			
-			StringTokenizer posfijo = new StringTokenizer(posfija.get(i)," ");
+		ArrayList<Integer> pilaExpresion = new ArrayList<Integer>();
+		//Vector<Vector<String>> rowData = new Vector<Vector<String>>();
+		StringTokenizer ExpVar = new StringTokenizer(expresiones_var,"_");
+		String expresionEscribir = "";
+		
+		
+			Vector<Vector<String>> rowData = new Vector<Vector<String>>();
+
+			StringTokenizer posfijo = new StringTokenizer(posfija.get(ultimoElemento)," ");
 			
 			int tempCount = 1;
-			
+			String var = "";
+			if(variable.hasMoreTokens()) {
+				var = variable.nextToken();
+			}
+			if(ExpVar.hasMoreTokens()) {
+				expresionEscribir = ExpVar.nextToken();
+			}
 			while(posfijo.hasMoreTokens()) {
 				Vector<String> expresion = new Vector<String>();
 				String valor = posfijo.nextToken();
 				if(valor.matches("[0-9]+([0-9])*")||valor.matches("[a-zA-Z]+([a-zA-Z0-9])*")) {//Si se trata de un number o identificador
 					pila.add(valor);
+					if(valor.matches("[0-9]+([0-9])*")) {
+						pilaExpresion.add(Integer.parseInt(valor));
+					}else {
+						System.out.println(semantico.getExpresion(valor));
+						pilaExpresion.add(Integer.parseInt(semantico.getExpresion(valor)));
+					
+					}
 				}else {//Es un signo =)
 					String operand2 = pila.remove(pila.size()-1),operand1 = pila.remove(pila.size()-1);
 					expresion.add(valor);
@@ -252,16 +322,17 @@ public class CodigoIntermedio {
 					expresion.add("T"+tempCount);
 					
 					pila.add("T"+tempCount);
+					System.out.println(posfija.get(ultimoElemento));
+					System.out.println(pilaExpresion.toString());
+					int num1 = pilaExpresion.remove(pila.size()-1),num2 = pilaExpresion.remove(pila.size()-1);
+					pilaExpresion.add(evaluacionExpresion(valor,num1,num2));
 					tempCount++;
 				}
 				if(!expresion.isEmpty())
 					rowData.add(expresion);
 				
 			}
-			String var = "";
-			if(variable.hasMoreTokens()) {
-				var = variable.nextToken();
-			}
+			
 				
 				rowData.add(new Vector<String>());
 				rowData.get(rowData.size()-1).add(":=");
@@ -269,22 +340,25 @@ public class CodigoIntermedio {
 				rowData.get(rowData.size()-1).add(" ");
 				rowData.get(rowData.size()-1).add(var);
 			
-			jTCuadruplos.put(i,new ArrayList<Vector>());
+				tablaSimbolos.get(var).setValor(pilaExpresion.get(pilaExpresion.size()-1)+"");
+				semantico.getFilas()[tablaSimbolos.get(var).getFila()][3] = pilaExpresion.remove(pilaExpresion.size()-1)+"";
+				
+			jTCuadruplos.put(ultimoElemento,new ArrayList<Vector>());
 			Vector<String> expresioncita = new Vector<String>();
 			expresioncita.add(var);
-			expresioncita.add(semantico.getExpresion(var));
-			expresioncita.add(semantico.getPosicion(var));
+			expresioncita.add(expresionEscribir);
+			expresioncita.add(renglon);
 			
-			jTCuadruplos.get(i).add(expresioncita); // Es para poder hacer los JTable
-			jTCuadruplos.get(i).add(rowData);
+			jTCuadruplos.get(ultimoElemento).add(expresioncita); // Es para poder hacer los JTable
+			jTCuadruplos.get(ultimoElemento).add(rowData);
 			
 			
 			System.out.println(rowData.toString());
 			
 			
-		}
 		
-		return rowData;
+		System.out.println(jTCuadruplos.toString());
+		
 	}
 	private String watchElemento() { //Retorna el elemento m�s arriba en la pila
 		if(!pila.isEmpty())
