@@ -311,7 +311,15 @@ public class CodigoIntermedio {
 						pilaExpresion.add(Integer.parseInt(valor));
 					}else {
 						System.out.println(semantico.getExpresion(valor));
-						pilaExpresion.add(Integer.parseInt(semantico.getExpresion(valor)));
+						try {
+							pilaExpresion.add(Integer.parseInt(semantico.getExpresion(valor)));
+						}catch(NumberFormatException e){
+							// si esta vacia la cadena modo ""... Quiere decir que no se le ha puesto valor
+							// Por defecto... el valor que se le asignara será 0 uwu
+							if(semantico.getExpresion(valor).isEmpty()) {
+								pilaExpresion.add(0);
+							}
+						}
 					
 					}
 				}else {//Es un signo =)
