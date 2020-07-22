@@ -28,7 +28,7 @@ public class CodigoIntermedio {
 		columnName.add("Operando2");
 		columnName.add("Resultado");
 	}
-	//Pruebita de evaluación de expresiones
+	//Pruebita de evaluaciï¿½n de expresiones
 	public void evaluacionExpresion (Vector<Vector<String>> cuadruplo) {
 		System.out.println("Tabla:" +tablaSimbolos.size());
 		System.out.println(cuadruplo.toString());
@@ -41,7 +41,7 @@ public class CodigoIntermedio {
 		ArrayList<Integer>evaluacion=new ArrayList<Integer>();
 		ArrayList<String>varTemp=new ArrayList<String>();
 		ArrayList<Integer>valorVar=new ArrayList<Integer>();
-	char operador=' ';
+		char operador=' ';
 			while(i<cuadruplo.size()) {
 				System.out.println("Cuadruplo: "+cuadruplo.get(i).toString());
 					for (int j=0; j<cuadruplo.get(i).size();j++) {
@@ -51,39 +51,39 @@ public class CodigoIntermedio {
 					else if(j==0&&cuadruplo.get(i).get(j).equals("+")) 
 						operador='+';
 					else if (j==0&&cuadruplo.get(i).get(j).equals("-"))
-					operador='-';
+						operador='-';
 					else if(j==0&&cuadruplo.get(i).get(j).equals(":=")) { //Se trata de una asignacion
-						System.out.println("introduce Valor: ");
-						System.out.println((cuadruplo.get(i).get(2).equals(" ")));
+						//System.out.println("introduce Valor: ");
+						//System.out.println((cuadruplo.get(i).get(2).equals(" ")));
 						if(cuadruplo.get(i).get(2).equals(" ")&&valorVar.isEmpty()) {
 							tablaSimbolos.get(cuadruplo.get(i).get(3)).setValor(cuadruplo.get(i).get(1));
 							//Falta cambiar valor en la impresion 
+							semantico.getFilas()[tablaSimbolos.get(cuadruplo.get(i).get(3)).getFila()][3] = cuadruplo.get(i).get(1);
+							System.out.println(cuadruplo.get(i).get(1));
 						}
 						else {
-						tablaSimbolos.get(cuadruplo.get(i).get(3)).setValor(valorVar.get(valorVar.size()-1).toString());
-						System.out.println(valorVar.get(0));
-						varTemp.clear();
-						valorVar.clear();
+							tablaSimbolos.get(cuadruplo.get(i).get(3)).setValor(valorVar.get(valorVar.size()-1).toString());
+							//System.out.println(valorVar.get(0));
+							semantico.getFilas()[tablaSimbolos.get(cuadruplo.get(i).get(3)).getFila()][3] = valorVar.get(valorVar.size()-1).toString();
+							
+							varTemp.clear();
+							valorVar.clear();
 						}
 					}
 					else if(j==1&&cuadruplo.get(i).get(j).matches("[0-9]+([0-9])*")) {
 						num1=Integer.parseInt(cuadruplo.get(i).get(j));
 					}else if(j==1) {//Se trata de un identificador
-							System.out.println("entro aqui");
 							//Buscar en la tabla de variables temporales 
 							for (int g=0;g<varTemp.size();g++) {
-								System.out.println("Impresion tabla:"+varTemp.get(g));
-								System.out.println("Imprimir cuadruplo:"+cuadruplo.get(i).get(j)+".");
-								System.out.println((varTemp.get(g).equals(cuadruplo.get(i).get(j))));
 								if (varTemp.get(g).equals(cuadruplo.get(i).get(j)))
 									num1=valorVar.get(g);
 								isTemporal=true;
 							}
 							
 							if(!isTemporal&&tablaSimbolos.get(cuadruplo.get(i).get(j))!=null) {
-								System.out.println("valorcin: :"+tablaSimbolos.get(cuadruplo.get(i).get(j)));
+								
 								num1=Integer.parseInt(tablaSimbolos.get(cuadruplo.get(i).get(j)).getValor());
-							isTemporal=false;
+							    isTemporal=false;
 							}
 
 						}
@@ -98,7 +98,7 @@ public class CodigoIntermedio {
 								isTemporal=true;
 							}
 							if(!isTemporal&&tablaSimbolos.get(cuadruplo.get(i).get(j))!=null) {
-								System.out.println("valorcin: :"+tablaSimbolos.get(cuadruplo.get(i).get(j)));
+								//System.out.println("valorcin: :"+tablaSimbolos.get(cuadruplo.get(i).get(j)));
 								num2=Integer.parseInt(tablaSimbolos.get(cuadruplo.get(i).get(j)).getValor());
 							isTemporal=false;
 							}
@@ -107,7 +107,7 @@ public class CodigoIntermedio {
 					if (j==3) {
 						if(cuadruplo.get(i).get(j).toString().charAt(0)=='T') {
 						temp=cuadruplo.get(i).get(j).toString();
-						System.out.println(temp);
+						//System.out.println(temp);
 						varTemp.add(temp);
 						}
 						switch(operador) {
@@ -129,14 +129,14 @@ public class CodigoIntermedio {
 				
 				
 					i++;
-					System.out.println("num1"+num1);
+					/*System.out.println("num1"+num1);
 					System.out.println("num2"+num2);
 					System.out.println("op1"+operador);
 					System.out.println("CambiaVAlor:"+tablaSimbolos.get("b").getValor());
-					
+					*/
 			}
 			
-		System.out.println(resultado);
+		//System.out.println(resultado);
 		varTemp.clear();
 		valorVar.clear();
 		//System.out.println("CambiaVAlor:"+tablaSimbolos.get("c").getValor());
@@ -171,13 +171,13 @@ public class CodigoIntermedio {
 			++countTokens;
 			String token = exp.nextToken();
 			// AquÃ­ deberÃ­a empezar la evaluaciÃ³n postfija, Ã³ la que se escoja...
-			//La pila contiene todos los operadores y los paréntesis que abren, salen cuando hay un paréntesis que cierra o un operador de menor importancia =)
+			//La pila contiene todos los operadores y los parï¿½ntesis que abren, salen cuando hay un parï¿½ntesis que cierra o un operador de menor importancia =)
 			// Recordando que las expresiones se separan con espacios...
 			if(token.matches("[0-9]+([0-9])*") || token.matches("[a-zA-Z]+([a-zA-Z0-9])*")) { // Si son numeros.. que hace?
 				posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + token);
 				op = false;
 			}else {
-				if(countTokens == 1 && token.equals("-")) {//Si se trata de un número negativo =)
+				if(countTokens == 1 && token.equals("-")) {//Si se trata de un nï¿½mero negativo =)
 					posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + "0");	
 				}
 				if(token.equals("(")) {
@@ -190,12 +190,12 @@ public class CodigoIntermedio {
 							posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 							i--;
 						}
-						pila.remove(i);//Quita paréntesis que abre 
+						pila.remove(i);//Quita parï¿½ntesis que abre 
 					}else {
 						if(token.equals("*"))
 							op = true;
 						if(token.equals("-")&&op) {
-							posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + "0");//Multiplicación de números negativos
+							posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + "0");//Multiplicaciï¿½n de nï¿½meros negativos
 							pila.add(token);
 						}else {
 							if(importanciaOperador(watchElemento()) == importanciaOperador(token)) {//Si se trata de operadores con igual importancia
@@ -206,7 +206,7 @@ public class CodigoIntermedio {
 									pila.add(token);
 								}else { //Cuando la importancia del operador es menor
 									int i = pila.size()-1;
-									while(!pila.isEmpty()) {//Vacía y añado lo que entra
+									while(!pila.isEmpty()) {//Vacï¿½a y aï¿½ado lo que entra
 										posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 										i--;
 									}
@@ -286,7 +286,7 @@ public class CodigoIntermedio {
 		
 		return rowData;
 	}
-	private String watchElemento() { //Retorna el elemento más arriba en la pila
+	private String watchElemento() { //Retorna el elemento mï¿½s arriba en la pila
 		if(!pila.isEmpty())
 			return pila.get(pila.size()-1);
 		else
