@@ -13,6 +13,8 @@ public class CodigoIntermedio {
 	private ArrayList<String> posfija;
 	private Vector<String> columnName;
 	private HashMap<Integer,ArrayList<Vector>> jTCuadruplos;
+	private HashMap<String, TablaSimbolos> tablaSimbolos;
+	Vector<Vector<String>> cuadruplo=new Vector<Vector<String>>();
 	public CodigoIntermedio(Semantico sem) {
 		semantico = sem;
 		expresiones = semantico.getExpresiones();
@@ -20,11 +22,124 @@ public class CodigoIntermedio {
 		posfija = new ArrayList<String>();
 		columnName = new Vector<String>();
 		jTCuadruplos = new HashMap<Integer,ArrayList<Vector>>();
-		
+		tablaSimbolos= semantico.getTabla();
 		columnName.add("Operador");
 		columnName.add("Operando");
 		columnName.add("Operando2");
 		columnName.add("Resultado");
+	}
+	//Pruebita de evaluación de expresiones
+	public void evaluacionExpresion (Vector<Vector<String>> cuadruplo) {
+		System.out.println("Tabla:" +tablaSimbolos.size());
+		System.out.println(cuadruplo.toString());
+		int resultado=0;
+		int num1=0, num2=0;
+		String temp="";
+		int i=0;
+		boolean isTemporal=false;
+		ArrayList<String>variabes=new ArrayList<String>();
+		ArrayList<Integer>evaluacion=new ArrayList<Integer>();
+		ArrayList<String>varTemp=new ArrayList<String>();
+		ArrayList<Integer>valorVar=new ArrayList<Integer>();
+	char operador=' ';
+			while(i<cuadruplo.size()) {
+				System.out.println("Cuadruplo: "+cuadruplo.get(i).toString());
+					for (int j=0; j<cuadruplo.get(i).size();j++) {
+						System.out.println(j);
+					if(j==0&&cuadruplo.get(i).get(j).equals("*"))
+						operador='*';
+					else if(j==0&&cuadruplo.get(i).get(j).equals("+")) 
+						operador='+';
+					else if (j==0&&cuadruplo.get(i).get(j).equals("-"))
+					operador='-';
+					else if(j==0&&cuadruplo.get(i).get(j).equals(":=")) { //Se trata de una asignacion
+						System.out.println("introduce Valor: ");
+						System.out.println((cuadruplo.get(i).get(2).equals(" ")));
+						if(cuadruplo.get(i).get(2).equals(" ")&&valorVar.isEmpty()) {
+							tablaSimbolos.get(cuadruplo.get(i).get(3)).setValor(cuadruplo.get(i).get(1));
+							//Falta cambiar valor en la impresion 
+						}
+						else {
+						tablaSimbolos.get(cuadruplo.get(i).get(3)).setValor(valorVar.get(valorVar.size()-1).toString());
+						System.out.println(valorVar.get(0));
+						varTemp.clear();
+						valorVar.clear();
+						}
+					}
+					else if(j==1&&cuadruplo.get(i).get(j).matches("[0-9]+([0-9])*")) {
+						num1=Integer.parseInt(cuadruplo.get(i).get(j));
+					}else if(j==1) {//Se trata de un identificador
+							System.out.println("entro aqui");
+							//Buscar en la tabla de variables temporales 
+							for (int g=0;g<varTemp.size();g++) {
+								System.out.println("Impresion tabla:"+varTemp.get(g));
+								System.out.println("Imprimir cuadruplo:"+cuadruplo.get(i).get(j)+".");
+								System.out.println((varTemp.get(g).equals(cuadruplo.get(i).get(j))));
+								if (varTemp.get(g).equals(cuadruplo.get(i).get(j)))
+									num1=valorVar.get(g);
+								isTemporal=true;
+							}
+							
+							if(!isTemporal&&tablaSimbolos.get(cuadruplo.get(i).get(j))!=null) {
+								System.out.println("valorcin: :"+tablaSimbolos.get(cuadruplo.get(i).get(j)));
+								num1=Integer.parseInt(tablaSimbolos.get(cuadruplo.get(i).get(j)).getValor());
+							isTemporal=false;
+							}
+
+						}
+						else if(j==2&&cuadruplo.get(i).get(j).matches("[0-9]+([0-9])*")) {
+						num2=Integer.parseInt(cuadruplo.get(i).get(j));
+					}else {
+						if(j==2) {//Se trata de un identificador
+							//Buscar en la tabla de variables temporales 
+							for (int g=0;g<varTemp.size();g++) {
+								if (cuadruplo.get(i).get(j).toString().equals(varTemp.get(g)))
+									num2=valorVar.get(g);
+								isTemporal=true;
+							}
+							if(!isTemporal&&tablaSimbolos.get(cuadruplo.get(i).get(j))!=null) {
+								System.out.println("valorcin: :"+tablaSimbolos.get(cuadruplo.get(i).get(j)));
+								num2=Integer.parseInt(tablaSimbolos.get(cuadruplo.get(i).get(j)).getValor());
+							isTemporal=false;
+							}
+						}
+					}
+					if (j==3) {
+						if(cuadruplo.get(i).get(j).toString().charAt(0)=='T') {
+						temp=cuadruplo.get(i).get(j).toString();
+						System.out.println(temp);
+						varTemp.add(temp);
+						}
+						switch(operador) {
+						case '*':
+							valorVar.add(num1*num2);
+							break;
+						case '-':
+							valorVar.add(num1-num2);
+						break;
+						case '+':
+							valorVar.add(num1+num2);
+							break;
+						}
+						
+								}
+							
+						
+					}
+				
+				
+					i++;
+					System.out.println("num1"+num1);
+					System.out.println("num2"+num2);
+					System.out.println("op1"+operador);
+					System.out.println("CambiaVAlor:"+tablaSimbolos.get("b").getValor());
+					
+			}
+			
+		System.out.println(resultado);
+		varTemp.clear();
+		valorVar.clear();
+		//System.out.println("CambiaVAlor:"+tablaSimbolos.get("c").getValor());
 	}
 	
 	public void evaluarExpresion() { // Proximo a pensar
@@ -35,7 +150,8 @@ public class CodigoIntermedio {
 			posfijo(variable);
 		}
 		System.out.println(posfija.toString());
-		cuadruplos();
+		cuadruplo=cuadruplos();
+		evaluacionExpresion(cuadruplo);
 		
 	}
 	public HashMap<Integer,ArrayList<Vector>> tablaCuadruplos() {
@@ -55,12 +171,13 @@ public class CodigoIntermedio {
 			++countTokens;
 			String token = exp.nextToken();
 			// AquÃ­ deberÃ­a empezar la evaluaciÃ³n postfija, Ã³ la que se escoja...
+			//La pila contiene todos los operadores y los paréntesis que abren, salen cuando hay un paréntesis que cierra o un operador de menor importancia =)
 			// Recordando que las expresiones se separan con espacios...
 			if(token.matches("[0-9]+([0-9])*") || token.matches("[a-zA-Z]+([a-zA-Z0-9])*")) { // Si son numeros.. que hace?
 				posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + token);
 				op = false;
 			}else {
-				if(countTokens == 1 && token.equals("-")) {
+				if(countTokens == 1 && token.equals("-")) {//Si se trata de un número negativo =)
 					posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + "0");	
 				}
 				if(token.equals("(")) {
@@ -73,23 +190,23 @@ public class CodigoIntermedio {
 							posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 							i--;
 						}
-						pila.remove(i);
+						pila.remove(i);//Quita paréntesis que abre 
 					}else {
 						if(token.equals("*"))
 							op = true;
 						if(token.equals("-")&&op) {
-							posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + "0");
+							posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + "0");//Multiplicación de números negativos
 							pila.add(token);
 						}else {
-							if(importanciaOperador(watchElemento()) == importanciaOperador(token)) {
+							if(importanciaOperador(watchElemento()) == importanciaOperador(token)) {//Si se trata de operadores con igual importancia
 								posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(pila.size()-1));
 								pila.add(token);
 							}else {
-								if(importanciaOperador(token) > importanciaOperador(watchElemento())) {
+								if(importanciaOperador(token) > importanciaOperador(watchElemento())) { //Si el operador que entra tiene mayor importancia
 									pila.add(token);
-								}else {
+								}else { //Cuando la importancia del operador es menor
 									int i = pila.size()-1;
-									while(!pila.isEmpty()) {
+									while(!pila.isEmpty()) {//Vacía y añado lo que entra
 										posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 										i--;
 									}
@@ -104,7 +221,7 @@ public class CodigoIntermedio {
 			}
 		}
 		int i = pila.size()-1;
-		while(!pila.isEmpty()) {
+		while(!pila.isEmpty()) { //Vaciar la pila
 			posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 			i--;
 		}		
@@ -112,11 +229,12 @@ public class CodigoIntermedio {
 	}
 	
 	// ire a comer uwu
-	private void cuadruplos() {
+	private Vector<Vector<String>> cuadruplos() {
 		StringTokenizer variable = new StringTokenizer(expresiones, " ");
 		JTable table = null;
+		Vector<Vector<String>> rowData = new Vector<Vector<String>>();
 		for(int i = 0;i<posfija.size();i++) {
-			Vector<Vector<String>> rowData = new Vector<Vector<String>>();
+			
 			StringTokenizer posfijo = new StringTokenizer(posfija.get(i)," ");
 			
 			int tempCount = 1;
@@ -124,9 +242,9 @@ public class CodigoIntermedio {
 			while(posfijo.hasMoreTokens()) {
 				Vector<String> expresion = new Vector<String>();
 				String valor = posfijo.nextToken();
-				if(valor.matches("[0-9]+([0-9])*")||valor.matches("[a-zA-Z]+([a-zA-Z0-9])*")) {
+				if(valor.matches("[0-9]+([0-9])*")||valor.matches("[a-zA-Z]+([a-zA-Z0-9])*")) {//Si se trata de un number o identificador
 					pila.add(valor);
-				}else {
+				}else {//Es un signo =)
 					String operand2 = pila.remove(pila.size()-1),operand1 = pila.remove(pila.size()-1);
 					expresion.add(valor);
 					expresion.add(operand1);
@@ -163,10 +281,12 @@ public class CodigoIntermedio {
 			
 			System.out.println(rowData.toString());
 			
+			
 		}
 		
+		return rowData;
 	}
-	private String watchElemento() {
+	private String watchElemento() { //Retorna el elemento más arriba en la pila
 		if(!pila.isEmpty())
 			return pila.get(pila.size()-1);
 		else

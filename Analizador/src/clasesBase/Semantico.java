@@ -47,6 +47,10 @@ public class Semantico implements Tipo {
 	public String[][] getFilas(){
 		return filas;
 	}
+	public HashMap<String, TablaSimbolos> getTabla()
+	{
+		return tablaSimbolos;
+	}
 	String errorcin = "";
 	int fila = 0, column = 0;
 	int esperado = 0;

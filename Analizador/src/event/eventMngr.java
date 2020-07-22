@@ -99,6 +99,8 @@ public class eventMngr implements ActionListener{
 			JScrollPane contiene2 = new JScrollPane(cuadruplos);
 			consolaTabla.add("Cuadruplos", contiene2);
 			
+			
+			
 		}
 		//evento para boton salir
 		if(e.getSource() == panel.getBtnSalir()) {
