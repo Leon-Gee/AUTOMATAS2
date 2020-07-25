@@ -101,27 +101,54 @@ public class Panel extends JPanel {
 		// ------------------------------------------
 		
 		btnAbrirArchivo = new JButton(" Abrir Archivo");
-		btnAbrirArchivo.setBounds(640,10,130,20);
+		btnAbrirArchivo.setBounds(640,10,130,70);
 		btnAbrirArchivo.addActionListener(new eventMngr(this));
-		
-		
+		ImageIcon iconobtnabrir = new ImageIcon(this.getClass().getResource("/Imagenes/abrir.png"));
+		btnAbrirArchivo.setIcon(iconobtnabrir);
+		btnAbrirArchivo.setIconTextGap(1);
+		btnAbrirArchivo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+		btnAbrirArchivo.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+		btnAbrirArchivo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		btnAbrirArchivo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 		// ------------------------------------------
 		
 		// ------------------------------------------
 		// ------ GUARDAR UN ARCHIVO CREADO ---------
 		// ------------------------------------------
 		btnGuardarArchivo = new JButton("Guardar Archivo");
-		btnGuardarArchivo.setBounds(640, 50, 130,20);
+		btnGuardarArchivo.setIcon(iconobtnabrir);
+		btnGuardarArchivo.setBounds(640, 90, 130,70);
 		btnGuardarArchivo.addActionListener(new eventMngr(this));
+		ImageIcon iconobtnguardar = new ImageIcon(this.getClass().getResource("/Imagenes/guardar.png"));
+		btnGuardarArchivo.setIcon(iconobtnguardar);
+		btnGuardarArchivo.setIconTextGap(1);
+		btnGuardarArchivo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+		btnGuardarArchivo.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+		btnGuardarArchivo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		btnGuardarArchivo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 		//-------------------------------------------
 		// ANALIZAR
 		btnAnalizar = new JButton("Analizar");
-		btnAnalizar.setBounds(640, 90, 130, 20);
+		btnAnalizar.setBounds(640, 170, 130, 70);
 		btnAnalizar.addActionListener(new eventMngr(this));
+		ImageIcon iconobtnanalizar = new ImageIcon(this.getClass().getResource("/Imagenes/compilar.png"));
+		btnAnalizar.setIcon(iconobtnanalizar);
+		btnAnalizar.setIconTextGap(1);
+		btnAnalizar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+		btnAnalizar.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+		btnAnalizar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		btnAnalizar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 		// SALIR 
 		btnSalir = new JButton("Salir");
-		btnSalir.setBounds(640,130,130,20);
+		btnSalir.setBounds(640,250,130,70);
 		btnSalir.addActionListener(new eventMngr(this));
+		ImageIcon iconobtnsalir = new ImageIcon(this.getClass().getResource("/Imagenes/salir.png"));
+		btnSalir.setIcon(iconobtnsalir);
+		btnSalir.setIconTextGap(1);
+		btnSalir.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+		btnSalir.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+		btnSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		btnSalir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 		
 		
 		

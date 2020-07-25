@@ -243,7 +243,7 @@ public class CodigoIntermedio {
 							posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 							i--;
 						}
-						pila.remove(i);//Quita par�ntesis que abre 
+						pila.remove(i);//Quita parentesis que abre 
 					}else {
 						if(token.equals("*"))
 							op = true;

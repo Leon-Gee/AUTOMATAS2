@@ -9,15 +9,21 @@
 
 package main;
 
-import java.awt.Color;
+import com.sun.javafx.tk.Toolkit;
+import java.awt.*;
+import java.io.File;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+ 
 
 import Aplicacion.Panel;
 
 public class Frame extends JFrame{
 	Panel a = new Panel();
 	public Frame() {
+		ImageIcon ImageIcon = new ImageIcon(this.getClass().getResource("/Imagenes/logo.png"));
+	    Image logo = ImageIcon.getImage();
+	    this.setIconImage(logo);
 		this.setVisible(true);
 		this.setResizable(false);
 		this.setSize(800, 600);
