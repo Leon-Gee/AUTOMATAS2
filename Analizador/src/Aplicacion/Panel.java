@@ -33,6 +33,7 @@ public class Panel extends JPanel {
 	private JButton btnGuardarArchivo;
 	private JButton btnAnalizar;
 	private JButton btnSalir;
+	private JButton btnModoObscuro;
 	private JTabbedPane tpnConsolaTabla;
 	private eventMngr eventos;
 	private int lineas = 1;
@@ -140,7 +141,7 @@ public class Panel extends JPanel {
 		btnAnalizar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 		// SALIR 
 		btnSalir = new JButton("Salir");
-		btnSalir.setBounds(640,250,130,70);
+		btnSalir.setBounds(640,330,130,70);
 		btnSalir.addActionListener(new eventMngr(this));
 		ImageIcon iconobtnsalir = new ImageIcon(this.getClass().getResource("/Imagenes/salir.png"));
 		btnSalir.setIcon(iconobtnsalir);
@@ -149,7 +150,18 @@ public class Panel extends JPanel {
 		btnSalir.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
 		btnSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 		btnSalir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+		//Modo Obscuro
+		btnModoObscuro = new JButton("Modo Obscuro");
+		btnModoObscuro.setBounds(640,250,130,70);
+		btnModoObscuro.addActionListener(new eventMngr(this));
+		ImageIcon iconobtnObscuro = new ImageIcon(this.getClass().getResource("/Imagenes/obs.png"));
+		btnModoObscuro.setIcon(iconobtnObscuro);
+		btnModoObscuro.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+		btnModoObscuro.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+		btnModoObscuro.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+		btnModoObscuro.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 		
+	
 		
 		
 		scbContiene2 = new JScrollPane(txtResultado);
@@ -167,6 +179,7 @@ public class Panel extends JPanel {
 		add(btnAbrirArchivo);
 	    add(btnGuardarArchivo);
 	    add(btnAnalizar);
+	    add(btnModoObscuro);
 	    add(tpnConsolaTabla);
 		add(btnSalir);
 	    
