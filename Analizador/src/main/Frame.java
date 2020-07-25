@@ -9,7 +9,6 @@
 
 package main;
 
-import com.sun.javafx.tk.Toolkit;
 import java.awt.*;
 import java.io.File;
 

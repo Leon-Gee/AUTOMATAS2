@@ -37,6 +37,7 @@ public class Panel extends JPanel {
 	private JTabbedPane tpnConsolaTabla;
 	private eventMngr eventos;
 	private int lineas = 1;
+	private boolean obs = false;
 	private JScrollPane scbRenglones;
 	
 	public Panel() {
@@ -61,7 +62,7 @@ public class Panel extends JPanel {
 		//---- CONTENEDOR PARA ESCRIBIR CODIGO ----
 		//-----------------------------------------
 		txtEscribir = new JTextArea(2000,1000);
-		txtEscribir.setFont(new Font("Consolas",0,12));
+		txtEscribir.setFont(new Font("Consolas",0,22));
 		
 		
 		
@@ -231,5 +232,29 @@ public class Panel extends JPanel {
 	public void setLineas(int linita) {
 		lineas = linita;
 	}
+
+	public JButton getBtnModoObscuro() {
+		return btnModoObscuro;
+	}
+
+	public void setTxtEscribir(JTextArea txtEscribir) {
+		this.txtEscribir = txtEscribir;
+	}
+
+	public void setTxtResultado(JTextArea txtResultado) {
+		this.txtResultado = txtResultado;
+	}
+
+	public void setTxtRenglones(JTextArea txtRenglones) {
+		this.txtRenglones = txtRenglones;
+	}
+	public boolean isObs() {
+		return obs;
+	}
+
+	public void setObs(boolean obs) {
+		this.obs = obs;
+	}
+	
 	
 }

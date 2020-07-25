@@ -2,8 +2,10 @@
 package event;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.*;
@@ -154,6 +156,32 @@ public class eventMngr implements ActionListener{
 			}
 		}
 		
+		if(e.getSource() == panel.getBtnModoObscuro()){
+			if(!panel.isObs()) {
+			panel.getTxtEscribir().setForeground(Color.white);
+			panel.getTxtEscribir().setBackground(new Color(3,30,39));
+			panel.setBackground(new Color(47,47,47));
+			panel.getBtnAbrirArchivo().setBackground(new Color(9,76,96));
+			panel.getBtnAbrirArchivo().setForeground(Color.yellow);
+			panel.getBtnAnalizar().setBackground(new Color(9,76,96));
+			panel.getBtnAnalizar().setForeground(Color.yellow);
+			panel.getBtnGuardarArchivo().setBackground(new Color(9,76,96));
+			panel.getBtnGuardarArchivo().setForeground(Color.yellow);
+			panel.getBtnSalir().setBackground(new Color(9,76,96));
+			panel.getBtnSalir().setForeground(Color.yellow);
+			panel.getBtnModoObscuro().setBackground(new Color(9,76,96));
+			panel.getBtnModoObscuro().setForeground(Color.yellow);
+			panel.setObs(true);
+		}else {
+			panel.getTxtEscribir().setForeground(Color.black);
+			panel.getTxtEscribir().setBackground(Color.white);
+			panel.setBackground(Color.white);
+			panel.getBtnAbrirArchivo().setBackground(Color.white);
+			panel.getBtnAbrirArchivo().setForeground(Color.black);
+			panel.setObs(false);
+		}
+		
+		}
 	}
 	
 
