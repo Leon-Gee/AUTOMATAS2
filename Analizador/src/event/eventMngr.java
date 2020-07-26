@@ -153,9 +153,11 @@ public class eventMngr implements ActionListener{
 		}
 		
 		if(e.getSource() == panel.getBtnModoObscuro()){
+			ImageIcon icon = new ImageIcon(this.getClass().getResource("/Imagenes/obs.png"));
 			if(!panel.isObs()) {
+			panel.getBtnModoObscuro().setText("Modo Claro");
+			icon = new ImageIcon(this.getClass().getResource("/Imagenes/claro.png"));
 			
-				
 			panel.getTxtEscribir().setForeground(Color.white);
 			panel.getTxtEscribir().setBackground(new Color(3,30,39));
 			panel.setBackground(new Color(47,47,47));
@@ -223,10 +225,10 @@ public class eventMngr implements ActionListener{
 			panel.getScbContiene2().getHorizontalScrollBar().setBackground(Color.white);
 			
 			
-			
+			panel.getBtnModoObscuro().setText("Modo Oscuro");
 			panel.setObs(false);
 		}
-		
+			panel.getBtnModoObscuro().setIcon(icon);
 		}
 	}
 	
