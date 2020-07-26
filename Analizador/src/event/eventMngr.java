@@ -187,6 +187,7 @@ public class eventMngr implements ActionListener{
 			
 			panel.getScbContiene2().getVerticalScrollBar().setBackground(new Color(3,30,39));
 			panel.getScbContiene2().getHorizontalScrollBar().setBackground(new Color(3,30,39));
+			
 			panel.setObs(true);
 		}else {
 			panel.getTxtEscribir().setForeground(Color.black);
@@ -203,6 +204,26 @@ public class eventMngr implements ActionListener{
 			panel.getBtnSalir().setForeground(Color.black);
 			panel.getBtnModoObscuro().setBackground(Color.white);
 			panel.getBtnModoObscuro().setForeground(Color.black);
+			
+			
+			panel.getTxtRenglones().setForeground(Color.black);
+			panel.getTxtRenglones().setBackground(Color.white);
+			
+			panel.getTxtResultado().setForeground(Color.black);
+			panel.getTxtResultado().setBackground(Color.white);
+			
+			panel.getScbRenglones().setBackground(Color.white);
+			panel.getScbContiene().setBackground(Color.white);
+			panel.getScbContiene2().setBackground(Color.white);
+			
+			panel.getScbContiene().getVerticalScrollBar().setBackground(Color.white);
+			panel.getScbContiene().getHorizontalScrollBar().setBackground(Color.white);
+			
+			panel.getScbContiene2().getVerticalScrollBar().setBackground(Color.white);
+			panel.getScbContiene2().getHorizontalScrollBar().setBackground(Color.white);
+			
+			
+			
 			panel.setObs(false);
 		}
 		

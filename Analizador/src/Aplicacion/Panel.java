@@ -36,13 +36,13 @@ public class Panel extends JPanel {
 	private JButton btnModoObscuro;
 	private JTabbedPane tpnConsolaTabla;
 	private eventMngr eventos;
-	JMenuBar barra = new JMenuBar(); 
 	private int lineas = 1;
 	private boolean obs = false;
 	private JScrollPane scbRenglones;
 	
 	public Panel() {
 		setLayout(null); 
+	
 		tpnConsolaTabla = new JTabbedPane();
 		//--------------------------------------------------
 		//---- CONTENEDOR PARA VER EL NUMERO DE RENGLON ----
@@ -176,10 +176,11 @@ public class Panel extends JPanel {
 		txtResultado.setEditable(false);
 		
 		
+		add(barra);
 		add(scbRenglones);
 		add(scbContiene);
 		add(btnAbrirArchivo);
-	    add(btnGuardarArchivo);
+		add(btnGuardarArchivo);
 	    add(btnAnalizar);
 	    add(btnModoObscuro);
 	    add(tpnConsolaTabla);
