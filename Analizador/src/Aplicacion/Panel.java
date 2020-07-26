@@ -176,7 +176,7 @@ public class Panel extends JPanel {
 		txtResultado.setEditable(false);
 		
 		
-		add(barra);
+
 		add(scbRenglones);
 		add(scbContiene);
 		add(btnAbrirArchivo);
