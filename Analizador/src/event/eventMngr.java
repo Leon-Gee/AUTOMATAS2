@@ -19,18 +19,10 @@ import clasesBase.*;
 public class eventMngr implements ActionListener{
 	private Panel panel;
 	private JFileChooser escoger;
-	private JTextArea renglones;
-	private JTextArea texto;
-	private JTextArea resultado;
-	private JTabbedPane consolaTabla;
 	
 	public eventMngr(Panel pan) {
 		panel = pan;
-		texto = panel.getTxtEscribir();
-		resultado = panel.getTxtResultado();
 		escoger = new JFileChooser();
-		renglones = panel.getTxtRenglones();
-		consolaTabla = panel.getTpnConsolaTabla();
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -39,7 +31,7 @@ public class eventMngr implements ActionListener{
 		if(e.getSource() == panel.getBtnGuardarArchivo()) {
 			
 			escoger.setDialogTitle("");
-			int seleccion = escoger.showSaveDialog(texto);
+			int seleccion = escoger.showSaveDialog(panel.getTxtEscribir());
 			if(seleccion == escoger.APPROVE_OPTION) {
 				
 				String guardado = escoger.getSelectedFile().getName();
@@ -48,11 +40,13 @@ public class eventMngr implements ActionListener{
 				try {
 					FileWriter archivoEs = new FileWriter(direccion + "/" + guardado + ".txt");
 					PrintWriter escribir = new PrintWriter(archivoEs);
-					String contenido = texto.getText();
+					String contenido = panel.getTxtEscribir().getText();
 					StringTokenizer tokenizar = new StringTokenizer(contenido,"\n");
 					while(tokenizar.hasMoreTokens()) {
+						
 						String linea = tokenizar.nextToken();
 						escribir.println(linea);
+						
 					}
 					
 					escribir.close();
@@ -62,24 +56,25 @@ public class eventMngr implements ActionListener{
 				}
 			}
 		}
+		
 		//evento para boton analizar
 		if(e.getSource() == panel.getBtnAnalizar()) {
-			
-			Palabritas palabritas = new Palabritas(texto.getText());
+
+			Palabritas palabritas = new Palabritas(panel.getTxtEscribir().getText());
 
 			palabritas.analizador();
-			resultado.setText(palabritas.getErrorL());
+			panel.getTxtResultado().setText(palabritas.getErrorL());
 			
-			if(consolaTabla.getTabCount()> 1) {
-					consolaTabla.removeTabAt(1);
-					if(consolaTabla.getTabCount()>1)
-						consolaTabla.removeTabAt(1);
+			if(panel.getTpnConsolaTabla().getTabCount()> 1) {
+				panel.getTpnConsolaTabla().removeTabAt(1);
+					if(panel.getTpnConsolaTabla().getTabCount()>1)
+						panel.getTpnConsolaTabla().removeTabAt(1);
 			}
 			
 			JScrollPane contiene1;
 			contiene1 = new JScrollPane(palabritas.tablaSimbolos());
-			
-			consolaTabla.add("Tabla Simbolos",contiene1);
+
+			panel.getTpnConsolaTabla().add("Tabla Simbolos",contiene1);
 			
 			
 			JPanel cuadruplos = new JPanel();
@@ -99,11 +94,12 @@ public class eventMngr implements ActionListener{
 				
 			}
 			JScrollPane contiene2 = new JScrollPane(cuadruplos);
-			consolaTabla.add("Cuadruplos", contiene2);
+			panel.getTpnConsolaTabla().add("Cuadruplos", contiene2);
 			
 		
 			
 		}
+		
 		//evento para boton salir
 		if(e.getSource() == panel.getBtnSalir()) {
 			System.exit(0);
@@ -113,11 +109,11 @@ public class eventMngr implements ActionListener{
 			
 			int lineas = 1;
 			
-			if(consolaTabla.getTabCount()> 1)
-				consolaTabla.removeTabAt(1);
+			if(panel.getTpnConsolaTabla().getTabCount()> 1)
+				panel.getTpnConsolaTabla().removeTabAt(1);
 			
 			escoger.setDialogTitle("");
-			int seleccion = escoger.showOpenDialog(texto);
+			int seleccion = escoger.showOpenDialog(panel.getTxtEscribir());
 			
 			if(seleccion == escoger.APPROVE_OPTION) {
 				String guardado = escoger.getSelectedFile().getName();
@@ -127,16 +123,16 @@ public class eventMngr implements ActionListener{
 					BufferedReader archivin = new BufferedReader(lector);
 					String linea = archivin.readLine();
 					StringTokenizer tokenizar;
-					texto.setText("");
+					panel.getTxtEscribir().setText("");
 					lineas = 0;
-					renglones.setText("");
-					resultado.setText("Building in process...");
+					panel.getTxtRenglones().setText("");
+					panel.getTxtResultado().setText("Building in process...");
 					
 					while(linea != null) {
 						
 						tokenizar = new StringTokenizer(linea,"\n");
 						String linita = "";
-						renglones.append((++lineas) +"\n");
+						panel.getTxtRenglones().append((++lineas) +"\n");
 						
 						try {
 							linita = tokenizar.nextToken();
@@ -145,7 +141,7 @@ public class eventMngr implements ActionListener{
 						}
 						
 						panel.setLineas(lineas);
-						texto.append(linita+"\n");
+						panel.getTxtEscribir().append(linita+"\n");
 						linea = archivin.readLine();
 						
 					}
@@ -158,9 +154,13 @@ public class eventMngr implements ActionListener{
 		
 		if(e.getSource() == panel.getBtnModoObscuro()){
 			if(!panel.isObs()) {
+			
+				
 			panel.getTxtEscribir().setForeground(Color.white);
 			panel.getTxtEscribir().setBackground(new Color(3,30,39));
 			panel.setBackground(new Color(47,47,47));
+			
+			//botones
 			panel.getBtnAbrirArchivo().setBackground(new Color(9,76,96));
 			panel.getBtnAbrirArchivo().setForeground(Color.yellow);
 			panel.getBtnAnalizar().setBackground(new Color(9,76,96));
@@ -171,6 +171,22 @@ public class eventMngr implements ActionListener{
 			panel.getBtnSalir().setForeground(Color.yellow);
 			panel.getBtnModoObscuro().setBackground(new Color(9,76,96));
 			panel.getBtnModoObscuro().setForeground(Color.yellow);
+			
+			panel.getTxtRenglones().setForeground(Color.white);
+			panel.getTxtRenglones().setBackground(new Color(3,30,39));
+			
+			panel.getTxtResultado().setForeground(Color.white);
+			panel.getTxtResultado().setBackground(new Color(3,30,39));
+			
+			panel.getScbRenglones().setBackground(new Color(3,30,39));
+			panel.getScbContiene().setBackground(new Color(3,30,39));
+			panel.getScbContiene2().setBackground(new Color(3,30,39));
+			
+			panel.getScbContiene().getVerticalScrollBar().setBackground(new Color(3,30,39));
+			panel.getScbContiene().getHorizontalScrollBar().setBackground(new Color(3,30,39));
+			
+			panel.getScbContiene2().getVerticalScrollBar().setBackground(new Color(3,30,39));
+			panel.getScbContiene2().getHorizontalScrollBar().setBackground(new Color(3,30,39));
 			panel.setObs(true);
 		}else {
 			panel.getTxtEscribir().setForeground(Color.black);
@@ -178,6 +194,15 @@ public class eventMngr implements ActionListener{
 			panel.setBackground(Color.white);
 			panel.getBtnAbrirArchivo().setBackground(Color.white);
 			panel.getBtnAbrirArchivo().setForeground(Color.black);
+			
+			panel.getBtnAnalizar().setBackground(Color.white);
+			panel.getBtnAnalizar().setForeground(Color.black);
+			panel.getBtnGuardarArchivo().setBackground(Color.white);
+			panel.getBtnGuardarArchivo().setForeground(Color.black);
+			panel.getBtnSalir().setBackground(Color.white);
+			panel.getBtnSalir().setForeground(Color.black);
+			panel.getBtnModoObscuro().setBackground(Color.white);
+			panel.getBtnModoObscuro().setForeground(Color.black);
 			panel.setObs(false);
 		}
 		

@@ -18,17 +18,20 @@ import javax.swing.*;
 import Aplicacion.Panel;
 
 public class Frame extends JFrame{
+	
 	Panel a = new Panel();
+	
 	public Frame() {
 		ImageIcon ImageIcon = new ImageIcon(this.getClass().getResource("/Imagenes/logo.png"));
 	    Image logo = ImageIcon.getImage();
 	    this.setIconImage(logo);
 		this.setVisible(true);
 		this.setResizable(false);
-		this.setSize(800, 600);
+		this.setSize(800, 650);
 		this.setTitle("Compilador");
+		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		a.setSize(800, 600);
+		a.setSize(800, 650);
 		this.add(a);
 		
 	}

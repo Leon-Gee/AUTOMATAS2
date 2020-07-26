@@ -36,6 +36,7 @@ public class Panel extends JPanel {
 	private JButton btnModoObscuro;
 	private JTabbedPane tpnConsolaTabla;
 	private eventMngr eventos;
+	JMenuBar barra = new JMenuBar(); 
 	private int lineas = 1;
 	private boolean obs = false;
 	private JScrollPane scbRenglones;
@@ -171,7 +172,7 @@ public class Panel extends JPanel {
 		scbContiene2.setSize(750, 120);
 		
 		tpnConsolaTabla.add("Consola",scbContiene2);
-		tpnConsolaTabla.setBounds(30,425,600,120);
+		tpnConsolaTabla.setBounds(30,425,600,150);
 		txtResultado.setEditable(false);
 		
 		
