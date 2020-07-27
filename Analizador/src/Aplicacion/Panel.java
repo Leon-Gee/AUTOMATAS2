@@ -63,7 +63,7 @@ public class Panel extends JPanel {
 		//---- CONTENEDOR PARA ESCRIBIR CODIGO ----
 		//-----------------------------------------
 		txtEscribir = new JTextArea(2000,1000);
-		txtEscribir.setFont(new Font("Consolas",0,22));
+		txtEscribir.setFont(new Font("Consolas",0,12));
 		
 		
 		

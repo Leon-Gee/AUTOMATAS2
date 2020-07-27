@@ -350,8 +350,7 @@ public class Semantico implements Tipo {
 				
 					if(datoCorrecto) { // ModificaciÃƒÂ³n en la tabla de simbolos :D
 						
-						/*filas[tablaSimbolos.get(variable).getFila()][3] = valor;
-						tablaSimbolos.get(variable).setValor(valor);*/
+						/**/
 						if(expresion) {
 							codigoInter.addExpresion(variable);
 							codigoInter.addExpresiones_var(valor);
@@ -359,6 +358,9 @@ public class Semantico implements Tipo {
 							expresion = false;
 							codigoInter.evaluarExpresion(variable,valor);
 							codigoInter.removeExpresion(variable);
+						}else {
+							filas[tablaSimbolos.get(variable).getFila()][3] = valor;
+							tablaSimbolos.get(variable).setValor(valor);
 						}
 					}
 				}else {
@@ -605,5 +607,3 @@ public class Semantico implements Tipo {
 		}
 	
 }
-
-
