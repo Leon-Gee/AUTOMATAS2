@@ -19,7 +19,7 @@ public class Palabritas implements Tipo {
 	private final String[] palabras = {"public", "class", "int", "boolean", 
 			"if", "else", "while", "true", "false", "this", "new", "length",
 			"System","out","print","return"};
-	private final String[] signos = {"+","-", "*", "<", "=", /* / */ 
+	private final String[] signos = {"+","-", "*", "<", "=", "/",/* / */ 
 			"(", ")", "[", "]", "{", "}", "&&", ";", ",", ".","!"}; //OMG TENGO CONTROOOOL
 	private ArrayList<ArrayList<Token>> tokens = new ArrayList<ArrayList<Token>>();
 	
@@ -104,10 +104,14 @@ public class Palabritas implements Tipo {
 			patron = Pattern.compile("[a-zA-Z]+([a-zA-Z0-9])*");
 			verificar = patron.matcher(palabra);
 			if(!comentarioLargo)
-				if(palabra.charAt(0) == '/' && palabra.charAt(1) == '/') {
-					return;
+				try {
+					if(palabra.charAt(0) == '/' && palabra.charAt(1) == '/') {
+						return;
+					}
+				}catch(Exception e) {
+					System.out.println("DIVISION");
 				}
-			if(palabra.charAt(0) == '*') {
+			if(palabra.charAt(0) == '*' && comentarioLargo) {
 				++comen;
 			}
 			if(palabra.charAt(0) == '/' && comen > 0) {
@@ -201,6 +205,9 @@ public class Palabritas implements Tipo {
 						case "!":
 							tipin = NEGACION;
 							break;
+						case "/":
+							tipin = DIV;
+							break;
 						default:
 							tipo = "ERROR";
 								errorL += " ERROR LEXICO EN LA LINEA "+renglon+" Y EN LA COLUMNA "+columna+". ENTRADA INVALIDA: "+palabra+".\n";
@@ -236,7 +243,7 @@ public class Palabritas implements Tipo {
 			
 				cadena = cadena.replace(signos[i], "@");
 				cadena = cadena.replace("@"," " + signos[i] + " ");
-		
+				System.out.println(cadena);
 			
 		}
 		// algo=algo;

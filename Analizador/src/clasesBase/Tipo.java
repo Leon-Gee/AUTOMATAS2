@@ -16,19 +16,20 @@ public interface Tipo {
 	int RESTA = 4;
 	int MENOR = 5;
 	int POR = 6;
-	int AND = 7;
+	int DIV = 7;
+	int AND = 8;
 	// SIMBOLOS RADOS
-	int LLAVE_A = 8;
-	int LLAVE_C = 9;
-	int CORCHETE_A = 10;
-	int CORCHETE_C = 11;
-	int PARENTESIS_A = 12;
-	int PARENTESIS_C = 13;
-	int COMA = 14;
-	int PUNTO_COMA = 15;
-	int NEGACION = 16;
-	int PUNTO = 17;
-	int NUM = 18;
+	int LLAVE_A = 9;
+	int LLAVE_C = 10;
+	int CORCHETE_A = 11;
+	int CORCHETE_C = 12;
+	int PARENTESIS_A = 13;
+	int PARENTESIS_C = 14;
+	int COMA = 15;
+	int PUNTO_COMA = 16;
+	int NEGACION = 17;
+	int PUNTO = 18;
+	int NUM = 19;
 	// PALABRAS RESERVADAS
 	int PUBLIC = -1;
 	int CLASS = -2;

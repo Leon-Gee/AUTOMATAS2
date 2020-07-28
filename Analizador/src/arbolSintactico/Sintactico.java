@@ -356,6 +356,7 @@ public class Sintactico implements Tipo {
 					case SUMA:
 					case RESTA:
 					case POR:
+					case DIV:
 						esp.add(IDENT);
 						esp.add(NUM);
 						esp.add(PARENTESIS_A);
@@ -462,6 +463,7 @@ public class Sintactico implements Tipo {
 		ArrayList<Integer> P_A = new ArrayList<Integer>();
 
 		int posicion = 0;
+		
 		for(int i = checar;i<tokens.size();i++) {
 			for(int q = 0;q<esp.size();q++) {
 				if(esp.get(q) == tokens.get(i).getTipo()) {
@@ -469,6 +471,7 @@ public class Sintactico implements Tipo {
 					break;
 				}
 			}
+			System.out.println(tokens.get(i).getValor());
 			if(esp.size() == 0) {
 				switch(tokens.get(i).getTipo()) {
 				case INT:
@@ -484,6 +487,7 @@ public class Sintactico implements Tipo {
 					esp.add(IGUAL);
 					esp.add(SUMA);
 					esp.add(RESTA);
+					esp.add(DIV);
 					esp.add(POR);
 					esp.add(PUNTO);
 					esp.add(PUNTO_COMA);
@@ -501,12 +505,14 @@ public class Sintactico implements Tipo {
 				case NUM:
 					esp.add(SUMA);
 					esp.add(RESTA);
+					esp.add(DIV);
 					esp.add(POR);
 					esp.add(PARENTESIS_C);
 					esp.add(PUNTO_COMA);
 					break;
 				case SUMA:
 				case RESTA:
+				case DIV:
 				case POR:
 					esp.add(IDENT);
 					esp.add(NUM);
@@ -523,6 +529,7 @@ public class Sintactico implements Tipo {
 					esp.add(SUMA);
 					esp.add(RESTA);
 					esp.add(POR);
+					esp.add(DIV);
 					if(C_A.size()!=0)
 						C_A.remove(C_A.size()-1);
 					else 
@@ -531,6 +538,7 @@ public class Sintactico implements Tipo {
 				case PARENTESIS_C:
 					esp.add(POR);
 					esp.add(SUMA);
+					esp.add(DIV);
 					esp.add(RESTA);
 					esp.add(PUNTO_COMA);
 					posicion = i;
@@ -797,19 +805,24 @@ public class Sintactico implements Tipo {
 					esp.add(IDENT);
 					
 				}
+				if(tipo == DIV) {
+					esp.add(IDENT);
+					esp.add(NUM);
+				}
 				if(tipo == CORCHETE_A || tipo == IGUAL)
 					noTiene = true;
-				if(tipo == IGUAL || tipo == IDENT ||tipo == PARENTESIS_A  || tipo == CORCHETE_A || tipo == AND || tipo == MENOR ||tipo == COMA || tipo == SUMA || tipo == RESTA  || tipo == POR ) {
+				if(tipo == IGUAL || tipo == IDENT ||tipo == PARENTESIS_A  || tipo == CORCHETE_A || tipo == AND || tipo == MENOR ||tipo == COMA || tipo == SUMA||tipo == DIV || tipo == RESTA  || tipo == POR ) {
 					esp.add(PARENTESIS_A); // num = num*(this.ALGo);M 
 					esp.add(THIS);
 					esp.add(NUM);
 				}
-				if(tipo == POR || tipo == IGUAL) {
+				if(tipo == POR || tipo == IGUAL || tipo == DIV) {
 					esp.add(RESTA);
 				}
 				if(tipo == IDENT || tipo == NUM || tipo == LENGTH || tipo == CORCHETE_C || tipo == PARENTESIS_C) {
 					esp.add(SUMA);
 					esp.add(RESTA);
+					esp.add(DIV);
 					esp.add(POR);
 					esp.add(COMA);
 				}

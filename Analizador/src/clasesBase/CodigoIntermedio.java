@@ -129,6 +129,9 @@ public class CodigoIntermedio {
 						case '*':
 							valorVar.add(num1*num2);
 							break;
+						case '/':
+							valorVar.add(num1/num2);
+							break;
 						case '-':
 							valorVar.add(num1-num2);
 						break;
@@ -167,6 +170,9 @@ public class CodigoIntermedio {
 			break;
 			case "+":
 				result = (num1+num2);
+				break;
+			case "/":
+				result = (num1/num2);
 				break;
 		}
 		return result;
@@ -257,6 +263,7 @@ public class CodigoIntermedio {
 							}else {
 								if(importanciaOperador(token) > importanciaOperador(watchElemento())) { //Si el operador que entra tiene mayor importancia
 									pila.add(token);
+									System.out.println(token);
 								}else { //Cuando la importancia del operador es menor
 									int i = pila.size()-1;
 									while(!pila.isEmpty()) {//Vac�a y a�ado lo que entra
@@ -277,8 +284,10 @@ public class CodigoIntermedio {
 		while(!pila.isEmpty()) { //Vaciar la pila
 			posfija.set(posfija.size()-1, posfija.get(posfija.size()-1) + " " + pila.remove(i));
 			i--;
-		}		
+		}	
+		System.out.println(posfija.get(posfija.size()-1));
 	}
+	
 	
 	int ultimoElemento = 0;
 	// ire a comer uwu
@@ -380,6 +389,10 @@ public class CodigoIntermedio {
 		int importancia = 0;
 		switch(operador) {
 		case "*":
+			importancia = 4;
+			break;
+		case "/":
+			System.out.println("AHHHH");
 			importancia = 4;
 			break;
 		case "+":
